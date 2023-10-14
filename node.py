@@ -2,7 +2,7 @@
 """
 Created on Sun Oct  8 20:11:03 2023
 
-@author: mrcho
+@author: Anthony
 """
 from copy import deepcopy
 from itertools import product

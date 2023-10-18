@@ -14,6 +14,15 @@ For more information, please refer [here](https://docs.github.com/en/get-started
 
 Please update the **[DEVLOG.md](./DEVLOG.md)** file descending by date once you reached a milestone (merge something to the main), to make reporting easier for our teammate.
 
+## Naming Conventions
+
+* package and module names: all-lowercase
+* class names: CapitalWords
+* function and variable names: all_lower_case
+* constants: ALL_CAPITAL_LETTERS
+
+For more information, please refer [PEP 8 - Style Guide for Python Code](https://peps.python.org/pep-0008/#prescriptive-naming-conventions)
+
 # Work Divide
 
 ## Basic Game Tree

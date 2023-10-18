@@ -8,7 +8,8 @@ from copy import deepcopy
 from itertools import product
 
 
-def indices_filter(indices):
+def delta_filter(indices):
+    "filtering the delta of indices"
     if len(indices) != 2:
         return False
     index_1, index_2 = indices
@@ -17,30 +18,18 @@ def indices_filter(indices):
 
 
 INDICES_DELTA = list(product((-1, 0, 1), (-1, 0, 1)))
-INDICES_PAIRS = set(filter(indices_filter, map(
+INDICES_PAIRS = set(filter(delta_filter, map(
     frozenset, product(INDICES_DELTA, INDICES_DELTA))))
 LEN_TICTACTOE = 3
 PLAYERS = {1: 'X', -1: 'O', 0: ' '}
 
 
-def _number_to_string(n):
-    return PLAYERS[n]
-
-
-def check_terminal(node):
-    "check if the node is a terminal state"
-    # tic-tac-toe!
-    if node.winner:
-        return True
-
-    # board fulled
-    for row in node.data:
-        if 0 in row:
-            return False
-    return True
+def _number_to_string(turn):
+    return PLAYERS[turn]
 
 
 def _generate_tictactoe(coordinate):
+    "return indices of tictactoe"
     ind_row, ind_col = coordinate
     indices_tictactoe = []
     for delta_1, delta_2 in INDICES_PAIRS:
@@ -53,15 +42,54 @@ def _generate_tictactoe(coordinate):
 
 
 class Node:
-    "node of the game tree"
+    """
+    node of the game tree
 
-    def __init__(self, data, turn, parent=None):
-        self.data = data
+    params
+    ------
+    data : nested list or None,
+        the current status of board, giving None will return a empty borad
+    turn : 1 or -1,
+        the current player of this state
+    parent : Node or None,
+        the parent node of this node, None means a root node
+
+    attributes
+    ----------
+    terminated : bool,
+        whether this node is a terminal state
+    winner : 1, 0 or -1,
+        the winner of this state, 0 means no winners
+    children : tuple of Node,
+        child nodes of this node
+
+    """
+
+    def __init__(self, data=None, turn=1, parent=None):
+        self._set_data(data)
         self.turn = turn
         self.parent = parent
+        self.children = ()
+
         self.__get_coordinates()
         self.__check_winner()
+        self.__check_terminated()
         self.__get_name()
+
+    def _set_data(self, data):
+        if data is None:
+            data = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+        self.data = data
+
+    @property
+    def winner(self):
+        "the winner of this state, 0 means no winners"
+        return self.__winner
+
+    @property
+    def terminated(self):
+        "whether this state is a terminal state"
+        return self.__terminated
 
     def __repr__(self):
         return self._name
@@ -83,7 +111,7 @@ class Node:
 
     def __check_winner(self):
         "check if there is a winner"
-        self.winner = 0
+        self.__winner = 0
         for player, coordinates in self.coordinates.items():
             if player == 0:
                 continue
@@ -92,15 +120,34 @@ class Node:
             for coordinate in coordinates:
                 for ind_tictactoe in _generate_tictactoe(coordinate):
                     if len(ind_tictactoe & coordinates) == LEN_TICTACTOE:
-                        self.winner = player
+                        self.__winner = player
                         return
 
+    def __check_terminated(self):
+        self.__terminated = False
+
+        # tic-tac-toe!
+        if self.winner:
+            self.__terminated = True
+
+        # board fulled
+        else:
+            for row in self.data:
+                if 0 in row:
+                    self.__terminated = False
+                    return
+
     def expand(self):
-        "return children nodes"
+        "get and return a tuple of child nodes"
+        if self.terminated:
+            self.children = ()
+            return self.children
+
         children = []
         for ind_row, ind_col in self.coordinates.get(0, set()):
             data = deepcopy(self.data)
             data[ind_row][ind_col] = self.turn
             node = type(self)(data, -self.turn, parent=self)
             children.append(node)
-        return children
+        self.children = tuple(children)
+        return self.children

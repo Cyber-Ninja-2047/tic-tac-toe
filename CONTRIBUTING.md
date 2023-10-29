@@ -1,5 +1,11 @@
 # Basic Policies
 
+## Install Project
+
+We use **[poetry](https://python-poetry.org/docs/)** to manage this python project, please install poetry first.
+
+Then, run `poetry install` in the root directory of this project to install this tic-tac-toe project. Poetry will create a virtual python environment automatically, you can choose to link this environment to you IDE (VS code, Spyder, etc.) or use your own environment by running `poetry config virtualenvs.create false` .
+
 ## Third-party Library
 
 Let's try not to use third-party library to finish this project, except of the GUI part. If you import a third-party library, please don't forget to add this requirement by **[poetry](https://python-poetry.org/docs/)**.

@@ -3,6 +3,9 @@
 Created on Sun Oct  8 20:11:03 2023
 
 @author: Anthony
+
+A basic component Node on the game tree
+
 """
 from copy import deepcopy
 from itertools import product
@@ -151,3 +154,20 @@ class Node:
             children.append(node)
         self.children = tuple(children)
         return self.children
+
+
+if __name__ == '__main__':
+    # a sample usage of the class Node
+
+    node = Node()
+    print(
+        f"initial state:\n{node}player: {node.turn}\nis a terminal state: {node.terminated}\nwinner: {node.winner}\n")
+
+    node = node.expand()[0]
+    print(
+        f"one of the child states:\n{node}player: {node.turn}\nis a terminal state: {node.terminated}\nwinner: {node.winner}\n")
+
+    while not node.terminated:
+        node = node.expand()[0]
+    print(
+        f"one of the terminal states:\n{node}player: {node.turn}\nis a terminal state: {node.terminated}\nwinner: {node.winner}\n")

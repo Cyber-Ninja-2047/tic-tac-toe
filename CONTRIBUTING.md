@@ -76,4 +76,7 @@ We can just create a command-line version of the game. Below are some features n
 
 ## Testing
 
-Run the game several times and make sure it is always a draw when computer vs computer and the computer never loses in the games with humans.
+Testing including two parts below:
+
+1. Write some unit test cases with **[pytest](https://docs.pytest.org/en/7.1.x/getting-started.html)**.
+2. Run the game several times and make sure it is always a draw when computer vs computer and the computer never loses in the games with humans.

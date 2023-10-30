@@ -1,5 +1,28 @@
 # Basic Policies
 
+## Work Division
+
+### ZHOU Huisheng (Anthony)
+
+1. coding: implement the basic component Node on the game tree
+2. coding: implement the alpha-beta pruning
+
+### Khan Rovaid
+
+1. coding: implement the basie component GameTree (minimax search algorithm)
+
+### ABEEKPENG Paul Walier
+
+1. coding: implement the CMD interface for a human player
+2. testing: write unit tests
+3. writing: write the progress report
+
+### TAO Shiu Hei (Sharon)
+
+1. testing: write unit tests
+2. testing: analyze the improvement of alpha-beta pruning
+4. writing: write the final report
+
 ## Install Project
 
 We use **[poetry](https://python-poetry.org/docs/)** to manage this python project, please install poetry first.
@@ -8,7 +31,7 @@ Then, run `poetry install` in the root directory of this project to install this
 
 ## Third-party Library
 
-Let's try not to use third-party library to finish this project, except of the GUI part. If you import a third-party library, please don't forget to add this requirement by **[poetry](https://python-poetry.org/docs/)**.
+We are required finish this project without third-party library. Please don't import any external library except of the testing part.
 
 ## GitHub Flow
 

@@ -10,6 +10,7 @@
 ### Khan Rovaid
 
 1. coding: implement the basie component GameTree (minimax search algorithm)
+2. coding: implement Monte Carlo tree search algorithm
 
 ### ABEEKPENG Paul Walier
 

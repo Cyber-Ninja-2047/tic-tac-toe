@@ -56,6 +56,8 @@ class Node:
         the current player of this state
     parent : Node or None,
         the parent node of this node, None means a root node
+    depth : int,
+        the depth of the node, 0 means a root node
 
     attributes
     ----------
@@ -63,16 +65,17 @@ class Node:
         whether this node is a terminal state
     winner : 1, 0 or -1,
         the winner of this state, 0 means no winners
-    children : tuple of Node,
+    children : list of Node,
         child nodes of this node
 
     """
 
-    def __init__(self, data=None, turn=1, parent=None):
+    def __init__(self, data=None, turn=1, parent=None, depth=0):
         self._set_data(data)
         self.turn = turn
         self.parent = parent
-        self.children = ()
+        self.depth = depth
+        self.children = []
 
         self.__get_coordinates()
         self.__check_winner()
@@ -142,17 +145,25 @@ class Node:
     def expand(self):
         "get and return a tuple of child nodes"
         if self.terminated:
-            self.children = ()
+            self.children = []
             return self.children
 
         children = []
-        for ind_row, ind_col in self.coordinates.get(0, set()):
-            data = deepcopy(self.data)
-            data[ind_row][ind_col] = self.turn
-            node = type(self)(data, -self.turn, parent=self)
+        for index in self.coordinates.get(0, set()):
+            node = self._expand_one(index)
             children.append(node)
-        self.children = tuple(children)
+        self.children = children
         return self.children
+
+    def _expand_one(self, index):
+        "expand one child node by the given index"
+        ind_row, ind_col = index
+        data = deepcopy(self.data)
+        data[ind_row][ind_col] = self.turn
+        child = type(self)(data, -self.turn,
+                           parent=self,
+                           depth=self.depth + 1)
+        return child
 
 
 if __name__ == '__main__':

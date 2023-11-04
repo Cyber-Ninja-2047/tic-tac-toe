@@ -99,8 +99,6 @@ class BasicGameTree:
         else:
             layer = self.layers[node.depth]
         layer.append(node)
-        if node.depth == 0 and len(layer) == 2:
-            raise
 
         # expand the node
         children = node.expand()
@@ -138,5 +136,9 @@ class BasicGameTree:
 
 if __name__ == '__main__':
     # sample usage
+
+    # build tree from the empty board by default
     tree = BasicGameTree()
+
+    # show layers of the tree
     tree.show()

@@ -1,5 +1,7 @@
 # 2023-10-18
 
+Author: Anthony
+
 Completed the class Node, including features below:
 
 * storing important properties:
@@ -12,4 +14,28 @@ Completed the class Node, including features below:
 * the "expand" method, to generate and return all child nodes.
 
 The users only need to instantiate the Node once. Then access the properties "terminated" and "winner" to check the status, or call method "expand" to get nodes in the next layer instead of to calculate board status manually every time.
+
+# 2023-11-03
+
+Author: Anthony
+
+Fixed the bug that Node.terminated remained True when the game board was fulled.
+
+# 2023-11-04
+
+Author: Anthony
+
+Completed the class BasicGameTree, including features below:
+
+* automatically expand all the nodes from the given root to leaves.
+* automatically score all the nodes from the bottom using Minimax algorithm.
+* the "get_score" method, returning the score of a given node.
+* the "show" method, showing the distrubution of every layers and the tree building time.
+
+Completed the class NodeSelector, including features below:
+
+* compatible with any types of game tree that has a "get_score" method.
+* the "get_next_node" method, returning the next best node from a given node base on the given game tree.
+* the "get_path" method, returning the game path from the given root node.
+* automatically build a new tree from the given node if the node is not on the original tree.
 

@@ -127,18 +127,17 @@ class Node:
                         return
 
     def __check_terminated(self):
-        self.__terminated = False
+        self.__terminated = True
 
         # tic-tac-toe!
         if self.winner:
-            self.__terminated = True
+            return
 
-        # board fulled
-        else:
-            for row in self.data:
-                if 0 in row:
-                    self.__terminated = False
-                    return
+        # board not fulled
+        for row in self.data:
+            if 0 in row:
+                self.__terminated = False
+                return
 
     def expand(self):
         "get and return a tuple of child nodes"

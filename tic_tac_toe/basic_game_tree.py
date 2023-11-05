@@ -8,7 +8,7 @@ The Basic Game Tree Class
 
 """
 import time
-from math import inf
+from math import inf, isinf
 from queue import LifoQueue
 from tic_tac_toe.node import Node
 
@@ -71,7 +71,7 @@ class BasicGameTree:
             print(f'{depth:<8d} {size:<7d} {self.__get_distrubution(layer)}')
 
     def __get_distrubution(self, layer):
-        distribution = {0: 0, 1: 0, -1: 0, -inf: 0}
+        distribution = {0: 0, 1: 0, -1: 0, -inf: 0, inf: 0}
         for node in layer:
             distribution[self.get_score(node)] += 1
         return distribution
@@ -114,7 +114,7 @@ class BasicGameTree:
                 self._score(node)
 
     def _score(self, node):
-        "score the given node by minimax, "
+        "score the given node by minimax"
         if node.terminated:
             score = node.winner
         else:
@@ -122,6 +122,8 @@ class BasicGameTree:
 
             # select the maximum score in +1 turn and minimum score in -1 turn
             score = max(child_scores, key=lambda x: x * node.turn)
+            if isinf(score):
+                score *= -1
 
         self.scores[node] = score
 
@@ -131,7 +133,7 @@ class BasicGameTree:
             return self.scores[node]
         except KeyError:
             # return the -inf, so we can ignore nodes without score during selecting
-            return -inf
+            return inf * node.turn
 
 
 if __name__ == '__main__':

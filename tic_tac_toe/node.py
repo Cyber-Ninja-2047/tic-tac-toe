@@ -67,6 +67,8 @@ class Node:
         the winner of this state, 0 means no winners
     children : list of Node,
         child nodes of this node
+    expanded : bool,
+        whether this node is expanded
 
     """
 
@@ -76,6 +78,7 @@ class Node:
         self.parent = parent
         self.depth = depth
         self.children = []
+        self.__expanded = False
 
         self.__get_coordinates()
         self.__check_winner()
@@ -97,11 +100,19 @@ class Node:
         "whether this state is a terminal state"
         return self.__terminated
 
+    @property
+    def expanded(self):
+        "whether this node is expanded"
+        return self.__expanded
+
     def __repr__(self):
         return self._name
 
     def __hash__(self):
         return hash(self._name)
+
+    def __eq__(self, oth):
+        return self._name == oth._name and self.turn == oth.turn
 
     def __get_name(self):
         self._name = '\n'.join([' '.join(map(_number_to_string, r))
@@ -144,10 +155,18 @@ class Node:
 
     def expand(self):
         "get and return a tuple of child nodes"
+        if self.expanded:
+            return self.children
+
+        # update the property
+        self.__expanded = True
+
+        # dont expand the terminal state
         if self.terminated:
             self.children = []
             return self.children
 
+        # expanding
         children = []
         for index in self.coordinates.get(0, set()):
             node = self._expand_one(index)

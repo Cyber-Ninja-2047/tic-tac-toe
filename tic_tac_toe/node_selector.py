@@ -78,10 +78,10 @@ class NodeSelector:
         """
         # build a new tree from the given node if the node is not on the tree
         if isinf(self.tree.get_score(node)):
-            self.tree = type(node, **self.__kwargs)
+            self.tree = type(self.tree, **self.__kwargs)
 
         # get child nodes
-        children = node.children
+        children = node.expand()
         if not children:
             return None
 

@@ -35,6 +35,7 @@ from tic_tac_toe.node_selector import NodeSelector
 
 # game tree of Minimax
 tree = BasicGameTree()
+tree.show()
 
 # initialize the node selector
 selector = NodeSelector(tree)

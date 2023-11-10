@@ -44,6 +44,10 @@ def _generate_tictactoe(coordinate):
     return indices_tictactoe
 
 
+class ExpandingError(BaseException):
+    "Error during node expanding"
+
+
 class Node:
     """
     node of the game tree
@@ -169,14 +173,20 @@ class Node:
         # expanding
         children = []
         for index in self.coordinates.get(0, set()):
-            node = self._expand_one(index)
+            node = self.expand_one(index)
             children.append(node)
         self.children = children
         return self.children
 
-    def _expand_one(self, index):
+    def expand_one(self, index):
         "expand one child node by the given index"
         ind_row, ind_col = index
+
+        # check index
+        if self.data[ind_row][ind_col] != 0:
+            raise ExpandingError("The space of given index is not empty!")
+
+        # update data
         data = deepcopy(self.data)
         data[ind_row][ind_col] = self.turn
         child = type(self)(data, -self.turn,

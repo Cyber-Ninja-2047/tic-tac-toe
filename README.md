@@ -30,7 +30,7 @@ You can print the game path through different algorithm.
 ### Minimax
 
 ```python
-from tic_tac_toe.basic_game_tree import BasicGameTree
+from tic_tac_toe.tree.basic_game_tree import BasicGameTree
 from tic_tac_toe.node_selector import NodeSelector
 
 # game tree of Minimax

@@ -98,7 +98,7 @@ class NodeSelector:
 
 if __name__ == "__main__":
     # sample usage
-    from tic_tac_toe.basic_game_tree import BasicGameTree
+    from tic_tac_toe.tree.basic_game_tree import BasicGameTree
 
     tree = BasicGameTree()
     selector = NodeSelector(tree)

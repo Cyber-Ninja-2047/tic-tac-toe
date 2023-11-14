@@ -87,8 +87,11 @@ class NodeSelector:
 
         # select the best score
         scores = [self.tree.get_score(x) * node.turn for x in children]
+        print(scores)
         score = max(scores)
+        print(score)
         children = [c for c, s in zip(children, scores) if s == score]
+        print(children)
 
         # randomly select the next node in the same highest/lowest score
         # to make the game more varied

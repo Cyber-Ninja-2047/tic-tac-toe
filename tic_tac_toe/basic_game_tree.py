@@ -10,7 +10,8 @@ The Basic Game Tree Class
 import time
 from math import inf, isinf
 from queue import LifoQueue
-from tic_tac_toe.node import Node
+
+from node import Node
 
 
 class BasicGameTree:

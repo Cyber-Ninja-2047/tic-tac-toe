@@ -33,7 +33,57 @@ def test_expanding():
     # parent of every child node should be the root
     assert all((x.parent == root for x in child_nodes))
 
-    # TODO: write more test statement for expanding
 
+def test_node_expand_no_moves():
+    data = [[[1, -1, 1], [-1, 1, -1], [1, -1, 1]], [[1, -1, 1], [1, -1, -1], [1, -1, 1]],
+            [[-1, 1, -1], [1, 1, -1], [1, -1, 1]],[[-1, 1, -1], [1, -1, -1], [1, 1, 1]],
+            [[1, 1, -1], [-1, 1, -1], [-1, 1, 1]],[[1, 1, -1], [1, -1, -1], [1, 1, -1]],
+            [[-1, -1, 1], [1, 1, -1], [1, -1, 1]],[[-1, -1, -1], [1, -1, -1], [-1, 1, 1]],
+            [[1, -1, -1], [1, -1, 1], [1, -1, 1]],[[1, -1, -1], [1, 1, -1], [1, -1, 1]]]
+    for datas in data:
+      node = Node(data=datas, turn=1)
+      children = node.expand()
+      assert len(children) == 0
+
+## try to expand a node with available moves
+def test_node_expand_with_moves():
+    data = [[[1, 0, -1], [-1, 1, -1], [1, -1, 1]], [[1, -1, 0], [1, -1, -1], [1, -1, 1]],
+            [[-1, 1, -1], [1, 0, -1], [1, 0, 1]],[[0, 1, -1], [1, -1, -1], [0, 1, 1]],
+            [[1, 0, -1], [0, 1, -1], [-1, 1, 0]],[[0, 1, -1], [1, 0, -1], [1, 0, -1]],
+            [[0, -1, 1], [1, 0, 0], [0, -1, 1]],[[0, -1, 0], [0, -1, -1], [-1, 0, 1]],
+            [[0, 0, -1], [1, -1, 0], [0, 0, 1]],[[0, 0, -1], [1, 0, 0], [0, -1, 1]]]
+    for datas in data:
+      node = Node(data=datas, turn=-1)
+      children = node.expand()
+      assert len(children) > 0
+
+## expand a node and check the return of a child node
+def test_node_expand_turn():
+    data = [[[1, 0, -1], [-1, 1, -1], [1, -1, 1]], [[1, -1, 0], [1, -1, -1], [1, -1, 1]],
+            [[-1, 1, -1], [1, 0, -1], [1, 0, 1]],[[0, 1, -1], [1, -1, -1], [0, 1, 1]],
+            [[1, 0, -1], [0, 1, -1], [-1, 1, 0]],[[0, 1, -1], [1, 0, -1], [1, 0, -1]],
+            [[0, -1, 1], [1, 0, 0], [0, -1, 1]],[[0, -1, 0], [0, -1, -1], [-1, 0, 1]],
+            [[0, 0, -1], [1, -1, 0], [0, 0, 1]],[[0, 0, -1], [1, 0, 0], [0, -1, 1]]]
+    for datas in data:  
+      node = Node(data=datas, turn=-1)
+      children = node.expand()
+      for child in children:
+        assert child.turn == 1
+
+
+## test the termination state with winner == 1
+def test_node_termination_winner():
+    data = [[[1, -1, 1], [-1, 1, -1], [1, -1, 1]],[[1, 1, 1], [-1, 1, -1], [1, -1, -1]],
+            [[1, -1, -1], [1, 1, -1], [1, -1, 1]],[[1, -1, -1], [1, 1, -1], [1, -1, 1]]]
+    node = Node(data=data, turn=-1)
+    assert node.terminated == True
+    assert node.winner == 1
+
+## test the termination state with winner == -1
+def test_node_termination_winner():
+    data = [[[1, -1, 1], [-1, -1, 1], [1, -1, 1]],[[1, 1, -1], [1, -1, 1], [-1, -1, 1]]]
+    node = Node(data=data, turn=-1)
+    assert node.terminated == True
+    assert node.winner == 1
 
 # TODO: write more test case for Node

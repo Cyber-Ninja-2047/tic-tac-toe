@@ -21,7 +21,43 @@ This project hasn't been published on PyPI.
 
 ## Play
 
-We are developing a Command Line Interface for a human player.
+We have a Command Line Interface for a human player.
+After installing this project (`poetry install`), you can run command below to play the game.
+
+```shell
+>>> tic_tac_toe
+Which side do you want to play (X/O)?
+>>> X
+Your next move is (row,column)?
+>>> 1,1
+--Your Move-----
+
+  X
+
+-----------------
+--Computer Move--
+
+  X
+O
+-----------------
+# ......
+--Computer Move--
+O O
+X X O
+O X X
+-----------------
+Your next move is (row,column)?
+>>> 0,2
+--Your Move-----
+O O X
+X X O
+O X X
+-----------------
+It's a draw!
+Win: 0 Draw: 1 Lose: 0
+Play again ([Y]/N)?
+>>> N
+```
 
 ## Show Results
 

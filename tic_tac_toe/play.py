@@ -72,7 +72,7 @@ def play(**kwargs):
 def initialize_game(size=3, tree_type="minimax", **kwargs):
     "Initialize the game components"
     root = Node(_generate_empty_board(size))
-    clazz = NAME_TO_TREE.get(tree_type, BasicGameTree)
+    clazz = NAME_TO_TREE[tree_type]
     game_tree = clazz(root, **kwargs)
     node_selector = NodeSelector(game_tree, **kwargs)
     return game_tree.root, node_selector

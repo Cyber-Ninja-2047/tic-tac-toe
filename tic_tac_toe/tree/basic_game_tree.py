@@ -68,12 +68,12 @@ class BasicGameTree:
     def show(self):
         "print size of each layers"
         print(f'building time of the tree: {self.building_time:.2f}s')
-        print("depth    size    score_distrubution")
+        print("depth    size    score_distribution")
         for depth, layer in enumerate(self.layers):
             size = len(layer)
-            print(f'{depth:<8d} {size:<7d} {self.__get_distrubution(layer)}')
+            print(f'{depth:<8d} {size:<7d} {self.__get_distribution(layer)}')
 
-    def __get_distrubution(self, layer):
+    def __get_distribution(self, layer):
         distribution = {0: 0, 1: 0, -1: 0, -inf: 0, inf: 0}
         for node in layer:
             distribution[self.get_score(node)] += 1

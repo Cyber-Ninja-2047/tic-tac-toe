@@ -10,7 +10,9 @@ The Basic Game Tree Class
 import time
 from math import inf, isinf
 from queue import LifoQueue
+
 from tic_tac_toe.node import Node
+
 
 
 class BasicGameTree:
@@ -121,10 +123,11 @@ class BasicGameTree:
             child_scores = map(self.get_score, node.children)
 
             # select the maximum score in +1 turn and minimum score in -1 turn
-            score = max(child_scores, key=lambda x: x * node.turn)
-            if isinf(score):
-                score *= -1
-
+            if node.turn > 0:
+              func = max
+            else:
+                func = min
+            score = func(child_scores)
         self.scores[node] = score
 
     def get_score(self, node):

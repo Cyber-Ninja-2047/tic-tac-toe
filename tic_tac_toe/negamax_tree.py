@@ -43,28 +43,27 @@
 
 
 
+from math import isinf
 from alpha_beta_pruning_tree import AlphaBetaPruningGameTree
+from basic_game_tree import BasicGameTree
 
 
-class NegamaxGameTree(AlphaBetaPruningGameTree):
-    def __init__(self, root=None, depth_limit=None):
-        super().__init__(root, depth_limit)
-
-    def _score(self, node, alpha=-float('inf'), beta=float('inf')):
-        "Score the given node using the negamax algorithm"
+class NegamaxGameTree(BasicGameTree):
+    """THis NegamaxGameTree is inherited from BasicGameTree i.e Minimax.
+    The only difference between Negamax and MiniMax is the calculation logic of the score
+    The tree for both of them will be same.
+    Maybe we can see the difference in the execution time of both trees."""
+    def _score(self, node):
+        "score the given node by negamax"
         if node.terminated:
-            return node.winner
+            score = node.winner
         else:
-            child_scores = [-self.get_score(child, -beta, -alpha) for child in node.children]
-            return max(child_scores, default=0)
+            child_scores = map(self.get_score, node.children)
 
-    def get_score(self, node, alpha=-float('inf'), beta=float('inf')):
-        "Get the score of the given node using the negamax algorithm"
-        try:
-            return self.scores[node]
-        except KeyError:
-            # Return the -inf, so we can ignore nodes without a score during selecting
-            return -self._score(node, -beta, -alpha)
+            # select the maximum score in +1 turn and minimum score in -1 turn
+            score = node.turn * max([child*node.turn for child in child_scores])
+
+        self.scores[node] = score
 
 if __name__ == '__main__':
     # Sample usage for NegamaxGameTree

@@ -66,7 +66,7 @@ def play(**kwargs):
 
         # print the win-lose ratio
         print(f'Win: {n_win} Draw: {n_draw} Lose: {n_lose}')
-        play_again = input("Play again ([Y]/N)? ").upper() == 'N'
+        play_again = input("Play again ([Y]/N)? ").upper() != 'N'
 
 
 def initialize_game(size=3, tree_type="minimax", **kwargs):
@@ -115,7 +115,11 @@ def player_move(current_node):
 
         # incase the specified space is occupied
         prompt = 'The specified space is occupied! Please enter another index (row,column): '
-        if current_node.data[row][col] != 0:
+        try:
+            if current_node.data[row][col] != 0:
+                continue
+        except IndexError:
+            prompt = 'Index out of range! Please enter another index (row,column): '
             continue
         break
 

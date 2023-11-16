@@ -1,11 +1,29 @@
 from math import inf
 from basic_game_tree import BasicGameTree
-from node import Node
 
 class AlphaBetaPruningGameTree(BasicGameTree):
     def __init__(self, root=None, depth_limit=None):
         super().__init__(root, depth_limit)
 
+    def _expand_next(self):
+        "expand the next node"
+        node = self._frontiers.get()
+
+        # record the node
+        if len(self.layers) <= node.depth:
+            layer = []
+            self.layers.append(layer)
+        else:
+            layer = self.layers[node.depth]
+        layer.append(node)
+
+        # expand the node
+        children = node.expand()
+
+        # put children to frontiers
+        for child in children:
+            self._put(child)
+            
     def _score(self, node, alpha=-inf, beta=inf):
         "score the given node by alpha-beta pruning"
         if node.terminated:

@@ -10,6 +10,8 @@ The NodeSelector class
 from math import isinf
 from random import choice
 
+from basic_game_tree import BasicGameTree
+
 
 class NodeSelector:
     """
@@ -101,7 +103,6 @@ class NodeSelector:
 
 if __name__ == "__main__":
     # sample usage
-    from tic_tac_toe.tree.basic_game_tree import BasicGameTree
 
     tree = BasicGameTree()
     selector = NodeSelector(tree)

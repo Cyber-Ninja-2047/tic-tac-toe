@@ -39,3 +39,16 @@ Completed the class NodeSelector, including features below:
 * the "get_path" method, returning the game path from the given root node.
 * automatically build a new tree from the given node if the node is not on the original tree.
 
+# 2023-11-16
+Author: Anthony
+
+Optimized the human player interface, including features below:
+
+* record the win-draw-lose times.
+* allow user to select another type of game tree.
+* allow user to input upper or lower case.
+* do not rebuild the tree in replaying, it saves much time when using the minimax game tree.
+* give more hints if user's input is invalid.
+* check the inputted index range.
+
+Fixed a bug for NodeSelector when it building a new tree.

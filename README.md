@@ -59,6 +59,13 @@ Play again ([Y]/N)?
 >>> N
 ```
 
+You can also call the play function in Python to play this game.
+
+```python
+from tic_tac_toe.play import play
+play()
+```
+
 ## Show Results
 
 You can print the game path through different algorithm.

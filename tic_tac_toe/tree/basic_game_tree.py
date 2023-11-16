@@ -17,10 +17,11 @@ from tic_tac_toe.node import Node
 
 class BasicGameTree:
     """
-    The basic game tree, also the base class of other types of game tree.
+    The basic game tree using Minimax algorithm,
+    also the base class of other types of game tree.
     It will expand all the nodes from the given root to leaves,
     or stop when reach the depth limit. After that, it will score all expanded
-    nodes from the bottom using minimax algorithm.
+    nodes from the bottom.
 
     params
     ------
@@ -93,7 +94,9 @@ class BasicGameTree:
     def _expand_next(self):
         "expand the next node"
         node = self._frontiers.get()
+        self._expand_the_node(node)
 
+    def _expand_the_node(self, node):
         # record the node
         if len(self.layers) <= node.depth:
             layer = []

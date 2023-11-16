@@ -7,11 +7,13 @@ Created on Tue Nov 14 15:43:27 2023
 
 from tic_tac_toe.node import Node
 from tic_tac_toe.tree.basic_game_tree import BasicGameTree
+from tic_tac_toe.tree.alpha_beta_pruning import AlphaBetaPruningTree
 from tic_tac_toe.node_selector import NodeSelector
 
 
 NAME_TO_TREE = {
     "minimax": BasicGameTree,
+    "ab_pruning": AlphaBetaPruningTree,
 }
 
 
@@ -69,10 +71,10 @@ def play(**kwargs):
         play_again = input("Play again ([Y]/N)? ").upper() != 'N'
 
 
-def initialize_game(size=3, tree_type="minimax", **kwargs):
+def initialize_game(size=3, tree_type="ab_pruning", **kwargs):
     "Initialize the game components"
     root = Node(_generate_empty_board(size))
-    clazz = NAME_TO_TREE.get(tree_type, BasicGameTree)
+    clazz = NAME_TO_TREE[tree_type]
     game_tree = clazz(root, **kwargs)
     node_selector = NodeSelector(game_tree, **kwargs)
     return game_tree.root, node_selector

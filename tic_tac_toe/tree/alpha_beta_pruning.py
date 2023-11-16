@@ -86,6 +86,7 @@ class AlphaBetaPruningTree(BasicGameTree):
         if not grandparent:
             return True
 
+        # pruning
         beta_grand, alpha_grand = self.get_score_range(grandparent)
         if grandparent.turn > 0:
             return alpha_parent >= beta_grand
@@ -117,7 +118,10 @@ class AlphaBetaPruningTree(BasicGameTree):
                 child_scores = [self.get_score_range(c)[1]
                                 for c in node.children]
                 # beta
-                score_range[0] = max(filter(filter_inf, child_scores))
+                try:
+                    score_range[0] = max(filter(filter_inf, child_scores))
+                except ValueError:
+                    pass
                 # alpha
                 score_range[1] = max(child_scores)
 
@@ -128,7 +132,10 @@ class AlphaBetaPruningTree(BasicGameTree):
                 # beta
                 score_range[0] = min(child_scores)
                 # alpha
-                score_range[1] = min(filter(filter_inf, child_scores))
+                try:
+                    score_range[1] = min(filter(filter_inf, child_scores))
+                except ValueError:
+                    pass
 
             # update the next parent
             node = node.parent

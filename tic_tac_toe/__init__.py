@@ -21,6 +21,6 @@ def init_args() -> argparse.Namespace:
                         help='Size of the game board. The default is 3.',
                         default=3, type=int)
     parser.add_argument('-t', '--tree', required=False,
-                        help='The type of game tree. The default is "minimax"',
-                        default="minimax", type=str)
+                        help='The type of game tree. The default is "ab_pruning"',
+                        default="ab_pruning", type=str)
     return parser.parse_args(sys.argv[1:])

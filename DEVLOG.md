@@ -70,7 +70,7 @@ If the script is run as a main script, it starts the game by calling the 'main_f
 
 Author: Rovaid
 1. Alpha-Beta Pruning Implementation
-1.1 Alpha-Beta Pruning Tree (Class: AlphaBetaPruningTree)
+2. Alpha-Beta Pruning Tree (Class: AlphaBetaPruningTree)
 Efficient Traversal: The AlphaBetaPruningTree class optimizes game tree traversal using the Alpha-Beta Pruning algorithm.
 
 Dynamic Expansion: The tree dynamically expands based on the current game state, minimizing unnecessary node exploration.
@@ -79,23 +79,27 @@ Pruning Conditions: Alpha-beta pruning conditions efficiently eliminate branches
 
 Score Maintenance: The _update_branch_from_leaf method ensures accurate score updates throughout the tree.
 
-1.2 Key Methods
-1.2.1 _expand_next()
+* Key Methods
+
+* _expand_next()
+
 Purpose: Expands the next node in the game tree.
 Functionality: Scores the node, checks if expanding is needed based on pruning conditions, and expands the node if necessary.
-1.2.2 _check_expanding(current_node)
+
+* _check_expanding(current_node)
 Purpose: Determines whether expanding the current node is needed.
 Functionality: Checks termination status, ensures the root node is expanded, and implements pruning conditions based on alpha and beta values.
-1.2.3 _update_branch_from_leaf(current_node)
+* _update_branch_from_leaf(current_node)
+
 Purpose: Updates scores of nodes on the entire branch.
 Functionality: Traverses from the leaf to the root, updating score ranges based on child nodes' scores.
-1.2.4 _score(current_node)
+* _score(current_node)
 Purpose: Computes the score for the node.
 Functionality: Handles terminal nodes by setting winner scores, updates scores for nodes on the branch when reaching a terminal state, and computes scores for middle nodes.
-1.2.5 get_score_range(current_node)
+* get_score_range(current_node)
 Purpose: Returns the score range of a given node.
 Functionality: Retrieves the score range from the scores dictionary or defaults to [-inf, inf] if the node is not scored.
-1.2.6 get_score(current_node)
+* get_score(current_node)
 Purpose: Returns the score of the node.
 Functionality: Considers terminal states and computes the score based on the maximum of the score range, considering the current node's turn. 
 

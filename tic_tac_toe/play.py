@@ -8,12 +8,14 @@ Created on Tue Nov 14 15:43:27 2023
 from tic_tac_toe.node import Node
 from tic_tac_toe.tree.basic_game_tree import BasicGameTree
 from tic_tac_toe.tree.alpha_beta_pruning import AlphaBetaPruningTree
+from tic_tac_toe.tree.monte_carlo import MonteCarloTree
 from tic_tac_toe.node_selector import NodeSelector
 
 
 NAME_TO_TREE = {
     "minimax": BasicGameTree,
     "ab_pruning": AlphaBetaPruningTree,
+    'montecarlo': MonteCarloTree,
 }
 
 

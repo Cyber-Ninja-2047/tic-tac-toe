@@ -7,31 +7,112 @@ Created on Fri Nov 17 12:34:02 2023
 class MonteCarloTree
 
 """
+import time
 from math import inf
 from random import choice
+from queue import PriorityQueue
 from tic_tac_toe.tree.basic_game_tree import BasicGameTree
 
 
 class MonteCarloTree(BasicGameTree):
+    """
+    The Minimax Game Tree with time limit.
+    The non-terminal node will be scored by simulations.
 
-    def __init__(self, root=None, depth_limit=4, n_iter=500, adjust_by_depth=False):
-        self.n_iter = n_iter
-        self.adjust_by_depth = adjust_by_depth
+    """
+
+    renew = True
+
+    _clazz_queue = PriorityQueue  # select the most promising node
+
+    def __init__(self, root=None, depth_limit=None, time_limit=2,
+                 exploration_weight=0):
+        self.time_limit = time_limit
+        self.exploration_weight = exploration_weight
         super().__init__(root=root, depth_limit=depth_limit)
 
+    def _put(self, node):
+        "put the given node into frontiers after checking node.depth"
+        if self.depth_limit:
+            if node.depth > self.depth_limit + self.root.depth:
+                return
+
+        self._frontiers.put((-self._get_priority(node), node))
+
     def _score_all(self):
-        "score all nodes from the bottom"
-        # score all bottom nodes
-        for node in self.layers[-1]:
-            self.scores[node] = estimate_monte_carlo_score(
-                node, self.n_iter, self.adjust_by_depth)
+        "Monte Carlo Tree will score nodes while expanding"
+        return
 
-        # back propagate
-        for layer in self.layers[-2::-1]:
-            for node in layer:
-                self._score(node)
+    def _expand_all(self):
+        start = time.time()
+        while (not self._frontiers.empty()
+               and time.time() - start < self.time_limit):
+            self._expand_next()
 
-    def __get_distribution(self, layer):
+    def _expand_next(self):
+        _, node = self._frontiers.get()
+        self._expand_the_node(node)
+        for child in node.children:
+            self._score(child)
+
+    def _score(self, node):
+        winner, _ = simulate(node)
+        self._backpropagate(node, winner)
+
+    def _backpropagate(self, node, winner):
+        # update whole branch
+        while node:
+            win_total = self.get_simulations(node)
+
+            # number of rollouts
+            win_total[1] += 1
+
+            # number of win
+            win_total[0] += int(winner == node.turn)
+
+            if node == self.root:
+                break
+            node = node.parent
+
+    def _get_priority(self, node):
+        exploitation = self.get_score(node)
+        if (not self.exploration_weight
+            or node == self.root
+                or not node.parent):
+            return exploitation
+
+        node_rollouts = self.get_simulations(node)[1]
+        parent_rollouts = self.get_simulations(node.parent)[1]
+        exploration = self.exploration_weight * (node_rollouts /
+                                                 (1 + parent_rollouts))**0.5
+        return exploitation + exploration
+
+    def get_score(self, node):
+        "return the win ratio of the node, will be negative for MIN player"
+        win_total = self.get_simulations(node)
+        try:
+            return win_total[0] / win_total[1] * node.turn
+        except ZeroDivisionError:
+            return 0
+
+    def get_simulations(self, node):
+        """
+        return the simulations result of the node,
+
+        returns
+        -------
+        win_total : [int, int],
+            [win times, rollout times] for the node's player.
+
+        """
+        try:
+            win_total = self.scores[node]
+        except KeyError:
+            win_total = [0, 0]
+            self.scores[node] = win_total
+        return win_total
+
+    def _get_distribution(self, layer):
         distribution = {0: 0, 1: 0, -1: 0, -inf: 0, inf: 0}
         for node in layer:
             score = self.get_score(node)
@@ -41,52 +122,6 @@ class MonteCarloTree(BasicGameTree):
                 score = -1
             distribution[score] += 1
         return distribution
-
-
-def estimate_monte_carlo_score(node, n_iter=500, adjust_by_depth=False):
-    """
-    Use Monte Carlo Tree Search to estimate the score of the node
-
-    params
-    ------
-    node : Node,
-        the node to estimate.
-    n_iter : int,
-        simulation times.
-    adjust_by_depth : bool,
-        True means that shallower states will take more weight.
-
-    returns
-    -------
-    score : float,
-        the estimated score of the node.
-
-    """
-    if node.terminated:
-        return node.winner
-
-    # times of draw, max win, min win
-    scores = [0, 0, 0]
-
-    # perform simulations
-    while n_iter > 0:
-        winner, depth = simulate(node)
-        if adjust_by_depth:
-            depth = depth - node.depth
-            scores[winner] += 1 / depth
-        else:
-            scores[winner] += 1
-
-        n_iter -= 1
-
-    # compute mct value
-    try:
-        score = (scores[1] / sum(scores[1:]) - 0.5) / 0.5
-    # always draw
-    except ZeroDivisionError:
-        score = 0
-
-    return score
 
 
 def simulate(node):
@@ -104,8 +139,9 @@ if __name__ == '__main__':
 
     # 2 non-terminated nodes
     node_ls = [
-        Node([[1, 1, 0], [-1, -1, 0], [0, 0, 0]], turn=1),
-        Node([[1, 1, 0], [-1, -1, 0], [0, 0, -1]], turn=-1),
+        Node(),
+        # Node([[1, 1, 0], [-1, -1, 0], [0, 0, 0]], turn=1),
+        # Node([[1, 1, 0], [-1, -1, 0], [0, 0, -1]], turn=-1),
     ]
 
     for node in node_ls:

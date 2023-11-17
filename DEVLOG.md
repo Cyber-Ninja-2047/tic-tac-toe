@@ -52,3 +52,7 @@ Optimized the human player interface, including features below:
 * check the inputted index range.
 
 Fixed a bug for NodeSelector when it building a new tree.
+
+#2023-11-17
+Author: Paul
+

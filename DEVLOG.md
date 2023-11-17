@@ -52,3 +52,18 @@ Optimized the human player interface, including features below:
 * check the inputted index range.
 
 Fixed a bug for NodeSelector when it building a new tree.
+
+# 2023-11-17
+
+Author: Paul
+
+Implementing the CMD interface for a human player:
+
+* The program imports necessary classes from the 'tic_tac_toe' package.
+* The 'initialize_game' function sets up the game, creating a new game tree and a node selector.
+* The 'choose_a_side' function allows the player to choose between 'X' or 'O', which are mapped to numeric values.
+* The 'player_move' function lets the player make a move by inputting an index. It checks for valid input and whether the chosen cell is empty.
+* The 'computer_move' function uses the 'NodeSelector' to determine and make the computer's move.
+* The 'main_function' controls the game flow, alternating between player and computer moves until the game ends. It then prints the result and asks if the player wants to play again
+
+If the script is run as a main script, it starts the game by calling the 'main_function'. This script allows a human player to play Tic-Tac-Toe against a computer, with the computer's moves determined by a simple adversarial search algorithm.

@@ -1,13 +1,15 @@
 from math import isinf
-
 from tic_tac_toe.tree.basic_game_tree import BasicGameTree
 
 
 class NegamaxGameTree(BasicGameTree):
-    """THis NegamaxGameTree is inherited from BasicGameTree i.e Minimax.
-    The only difference between Negamax and MiniMax is the calculation logic of the score
+    """
+    This NegamaxGameTree is inherited from BasicGameTree i.e Minimax.
+    The only difference between Negamax and MiniMax is the calculation logic of the score.
     The tree for both of them will be same.
-    Maybe we can see the difference in the execution time of both trees."""
+    Maybe we can see the difference in the execution time of both trees.
+
+    """
     def _score(self, node):
         "score the given node by negamax"
         if node.terminated:
@@ -20,6 +22,7 @@ class NegamaxGameTree(BasicGameTree):
 
         self.scores[node] = score
 
+
 if __name__ == '__main__':
     # Sample usage for NegamaxGameTree
 
@@ -28,4 +31,3 @@ if __name__ == '__main__':
 
     # Show layers of the tree
     tree.show()
-

@@ -7,13 +7,16 @@ Created on Tue Nov 14 15:43:27 2023
 
 from tic_tac_toe.node import Node
 from tic_tac_toe.tree.basic_game_tree import BasicGameTree
+from tic_tac_toe.tree.negamax_tree import NegamaxGameTree
 from tic_tac_toe.tree.alpha_beta_pruning import AlphaBetaPruningTree
 from tic_tac_toe.tree.monte_carlo import MonteCarloTree
+
 from tic_tac_toe.node_selector import NodeSelector
 
 
 NAME_TO_TREE = {
     "minimax": BasicGameTree,
+    "negamax": NegamaxGameTree,
     "ab_pruning": AlphaBetaPruningTree,
     'montecarlo': MonteCarloTree,
 }
@@ -70,12 +73,12 @@ def play(**kwargs):
 
         # print the win-lose ratio
         print(f'Win: {n_win} Draw: {n_draw} Lose: {n_lose}')
-        play_again = input("Play again ([Y]/N)? ").upper() != 'N'
+        play_again = input("Play again ([Y]/N)? ").upper().strip() != 'N'
 
 
-def initialize_game(size=3, tree_type="ab_pruning", **kwargs):
+def initialize_game(size=3, length=3, tree_type="minimax", **kwargs):
     "Initialize the game components"
-    root = Node(_generate_empty_board(size))
+    root = Node(_generate_empty_board(size), length=length)
     clazz = NAME_TO_TREE[tree_type]
     game_tree = clazz(root, **kwargs)
     node_selector = NodeSelector(game_tree, **kwargs)
@@ -94,7 +97,7 @@ def choose_a_side():
     while True:
         user_input = input(prompt)
         prompt = 'Invalid input! Please enter "X" or "O" (X/O): '
-        user_input = user_input.upper()
+        user_input = user_input.upper().strip()
         if user_input in {"X", "O"}:
             break
     player_side = {"X": 1, "O": -1}[user_input]

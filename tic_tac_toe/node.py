@@ -11,19 +11,7 @@ from copy import deepcopy
 from itertools import product
 
 
-def delta_filter(indices):
-    "filtering the delta of indices"
-    if len(indices) != 2:
-        return False
-    index_1, index_2 = indices
-    return (index_1[0] + index_2[0] == 0 and
-            index_1[1] + index_2[1] == 0)
-
-
-INDICES_DELTA = list(product((-1, 0, 1), (-1, 0, 1)))
-INDICES_PAIRS = set(filter(delta_filter, map(
-    frozenset, product(INDICES_DELTA, INDICES_DELTA))))
-LEN_TICTACTOE = 3
+TIC_DIRECTIONS = [(0, 1), (1, 0), (1, 1), (-1, 1)]
 PLAYERS = {1: 'X', -1: 'O', 0: ' '}
 
 
@@ -31,16 +19,14 @@ def _number_to_string(turn):
     return PLAYERS[turn]
 
 
-def _generate_tictactoe(coordinate):
+def _generate_tictactoe(coordinate, length):
     "return indices of tictactoe"
     ind_row, ind_col = coordinate
     indices_tictactoe = []
-    for delta_1, delta_2 in INDICES_PAIRS:
-        indices_tictactoe.append({
-            coordinate,
-            (ind_row + delta_1[0], ind_col + delta_1[1]),
-            (ind_row + delta_2[0], ind_col + delta_2[1]),
-        })
+    for delta_row, delta_col in TIC_DIRECTIONS:
+        index = {(ind_row + delta_row * ind,
+                  ind_col + delta_col * ind) for ind in range(length)}
+        indices_tictactoe.append(index)
     return indices_tictactoe
 
 
@@ -62,6 +48,8 @@ class Node:
         the parent node of this node, None means a root node
     depth : int,
         the depth of the node, 0 means a root node
+    length : int,
+        the winning number of marks in a horizontal, vertical, or diagonal row
 
     attributes
     ----------
@@ -76,11 +64,12 @@ class Node:
 
     """
 
-    def __init__(self, data=None, turn=1, parent=None, depth=0):
+    def __init__(self, data=None, turn=1, parent=None, depth=0, length=3):
         self._set_data(data)
         self.turn = turn
         self.parent = parent
         self.depth = depth
+        self.length = length
         self.children = []
         self.__expanded = False
 
@@ -139,11 +128,11 @@ class Node:
         for player, coordinates in self.coordinates.items():
             if player == 0:
                 continue
-            if len(coordinates) < LEN_TICTACTOE:
+            if len(coordinates) < self.length:
                 continue
             for coordinate in coordinates:
-                for ind_tictactoe in _generate_tictactoe(coordinate):
-                    if len(ind_tictactoe & coordinates) == LEN_TICTACTOE:
+                for ind_tictactoe in _generate_tictactoe(coordinate, self.length):
+                    if len(ind_tictactoe & coordinates) == self.length:
                         self.__winner = player
                         return
 
@@ -194,7 +183,8 @@ class Node:
         data[ind_row][ind_col] = self.turn
         child = type(self)(data, -self.turn,
                            parent=self,
-                           depth=self.depth + 1)
+                           depth=self.depth + 1,
+                           length=self.length)
         return child
 
 

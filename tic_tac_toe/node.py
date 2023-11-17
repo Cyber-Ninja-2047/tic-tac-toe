@@ -118,6 +118,9 @@ class Node:
     def __eq__(self, oth):
         return self._name == oth._name and self.turn == oth.turn
 
+    def __lt__(self, oth):
+        return self.depth < oth.depth
+
     def __get_name(self):
         self._name = '\n'.join([' '.join(map(_number_to_string, r))
                                 for r in self.data]) + '\n'

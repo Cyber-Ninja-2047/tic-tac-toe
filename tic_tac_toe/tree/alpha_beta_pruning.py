@@ -178,7 +178,10 @@ class AlphaBetaPruningTree(BasicGameTree):
             return node.winner
 
         score_range = self.get_score_range(node)
-        score = max(score_range, key=lambda x: x * node.turn)
+        if _filter_converged_scores(score_range):
+            score = max(score_range, key=lambda x: x * node.turn)
+        else:
+            score = node.turn * inf
         return score
 
 

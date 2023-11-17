@@ -54,8 +54,8 @@ Implementing the CMD interface for a human player:
 
 If the script is run as a main script, it starts the game by calling the 'main_function'. This script allows a human player to play Tic-Tac-Toe against a computer, with the computer's moves determined by a simple adversarial search algorithm.
 
-
 # 2023-11-16
+
 Author: Anthony
 
 Optimized the human player interface, including features below:
@@ -68,3 +68,39 @@ Optimized the human player interface, including features below:
 * check the inputted index range.
 
 Fixed a bug for NodeSelector when it building a new tree.
+
+# 2023-11-17
+
+Author: Rovaid
+
+1. Alpha-Beta Pruning Implementation
+* Alpha-Beta Pruning Tree (Class: AlphaBetaPruningTree)
+Efficient Traversal: The AlphaBetaPruningTree class optimizes game tree traversal using the Alpha-Beta Pruning algorithm.
+Dynamic Expansion: The tree dynamically expands based on the current game state, minimizing unnecessary node exploration.
+Pruning Conditions: Alpha-beta pruning conditions efficiently eliminate branches that do not impact the final decision.
+Score Maintenance: The _update_branch_from_leaf method ensures accurate score updates throughout the tree.
+* Key Methods
+* _expand_next()
+
+Purpose: Expands the next node in the game tree.
+Functionality: Scores the node, checks if expanding is needed based on pruning conditions, and expands the node if necessary.
+
+* _check_expanding(current_node)
+Purpose: Determines whether expanding the current node is needed.
+Functionality: Checks termination status, ensures the root node is expanded, and implements pruning conditions based on alpha and beta values.
+* _update_branch_from_leaf(current_node)
+
+Purpose: Updates scores of nodes on the entire branch.
+Functionality: Traverses from the leaf to the root, updating score ranges based on child nodes' scores.
+* _score(current_node)
+Purpose: Computes the score for the node.
+Functionality: Handles terminal nodes by setting winner scores, updates scores for nodes on the branch when reaching a terminal state, and computes scores for middle nodes.
+* get_score_range(current_node)
+Purpose: Returns the score range of a given node.
+Functionality: Retrieves the score range from the scores dictionary or defaults to [-inf, inf] if the node is not scored.
+* get_score(current_node)
+Purpose: Returns the score of the node.
+Functionality: Considers terminal states and computes the score based on the maximum of the score range, considering the current node's turn. 
+2. NegaMax Algorithm
+  * It's inherited from the BasicGameTree class
+  * The only difference between NegaMax and MiniMax is the scoring logic. which is minimax uses if ~ else statement for calculating the minimum and maximum player score and negamax uses the calculation logic which is score = turn*([score*turn for  score in child_scores])

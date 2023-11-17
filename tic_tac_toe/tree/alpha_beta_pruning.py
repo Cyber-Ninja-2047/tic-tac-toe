@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """
 Created on Wed Nov 15 16:16:26 2023
 
@@ -41,19 +42,19 @@ class AlphaBetaPruningTree(BasicGameTree):
 
     def _expand_next(self):
         "Expand the next node"
-        current_node = self._frontiers.get()
+        node = self._frontiers.get()
 
         # Score the node
-        self._score(current_node)
+        self._score(node)
 
         # Check the expanding
-        if not self._check_expanding(current_node):
+        if not self._check_expanding(node):
             return
 
         # Expand the node
-        self._expand_the_node(current_node)
+        self._expand_the_node(node)
 
-    def _check_expanding(self, current_node):
+    def _check_expanding(self, node):
         """
         Check if expanding is needed.
 
@@ -63,13 +64,13 @@ class AlphaBetaPruningTree(BasicGameTree):
             True means to expand, False means to stop.
 
         """
-        if current_node.terminated:
+        if node.terminated:
             return True
 
-        previous_node = current_node.parent
+        parent = node.parent
 
         # Root node must be expanded
-        if not previous_node:
+        if not parent:
             return True
 
         # Do not expand if the root has converged score
@@ -84,7 +85,7 @@ class AlphaBetaPruningTree(BasicGameTree):
             return True
 
         # Pruning
-        beta_old, alpha_old = self.get_score_range(old_node)
+        beta_grand, alpha_grand = self.get_score_range(grandparent)
 
         # Adjusted pruning conditions
         if old_node.turn > 0:  # MAX player

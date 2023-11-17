@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+
 """
 Created on Wed Nov 15 16:16:26 2023
 
-@author: Anthony
+@author: Rovaid
 
 The AlphaBetaPruningTree Class
 
@@ -17,25 +18,22 @@ def _filter_converged_scores(score_range):
 
 class AlphaBetaPruningTree(BasicGameTree):
     """
-    The game tree using Minimax algorithm with Alpha-Beta pruning.
-    It will score nodes when expanding,
-    and skip some branchs that make no effects to the result.
+    Game tree implementation using Minimax algorithm with Alpha-Beta pruning.
 
-    params
-    ------
+    Parameters
+    ----------
     root : Node or None,
-        The given root of the tree. None means to start from an empty board.
+        The root of the tree. None means starting from an empty board.
     depth_limit : int or None,
-        The depth limit of the tree, should only use on Monte Carlo Tree.
-        None means no depth limit.
+        The depth limit of the tree. None means no depth limit.
 
-    attributes
+    Attributes
     ----------
     layers : list,
         A nested list to store nodes layer by layer.
     scores : dict,
-        node(Node) - [minimum_score(-inf, -1, 0 or 1),
-                      maximum_score(-1, 0 or 1 or inf)]
+        node(Node) - [minimum_score(-inf, -1, 0, or 1),
+                      maximum_score(-1, 0, or 1, or inf)]
         A dictionary to match nodes to their score range.
     building_time : float,
         The building time of the tree, in seconds.
@@ -43,67 +41,59 @@ class AlphaBetaPruningTree(BasicGameTree):
     """
 
     def _expand_next(self):
-        "expand the next node"
+        "Expand the next node"
         node = self._frontiers.get()
 
-        # score the node
+        # Score the node
         self._score(node)
 
-        # check the expanding
+        # Check the expanding
         if not self._check_expanding(node):
             return
 
-        # expand the node
+        # Expand the node
         self._expand_the_node(node)
 
     def _check_expanding(self, node):
         """
-        Check if the expanding is needed.
+        Check if expanding is needed.
 
-        returns
+        Returns
         -------
         to_expand_or_not : bool,
             True means to expand, False means to stop.
 
         """
-        # the terminal state should be record
         if node.terminated:
             return True
 
-        parent = node.parent
+        previous_node = node.parent
 
-        # root node must be expanded
-        if not parent:
+        # Root node must be expanded
+        if not previous_node:
             return True
 
-        # do not expand if parent's score converged
-        beta_parent, alpha_parent = self.get_score_range(parent)
-        if alpha_parent == beta_parent:
+        # Do not expand if the root has converged score
+        beta_root, alpha_root = self.get_score_range(self.root)
+        if beta_root == alpha_root:
             return False
 
-        # check parent's parent
-        grandparent = parent.parent
-        if not grandparent:
+        # Check parent's parent
+        beta_previous, alpha_previous = self.get_score_range(previous_node)
+        old_node = previous_node.parent
+        if not old_node:
             return True
 
-        # pruning
-        beta_grand, alpha_grand = self.get_score_range(grandparent)
-        if grandparent.turn > 0:
-            return alpha_parent >= beta_grand
-        else:
-            return beta_parent <= alpha_grand
+        # Pruning
+        beta_old, alpha_old = self.get_score_range(old_node)
 
-        return True
+        # Adjusted pruning conditions
+        if old_node.turn > 0:  # MAX player
+            return alpha_previous >= beta_old
+        # MIN player
+        return beta_previous <= alpha_old
 
-    def _score_all(self):
-        """
-        Alpha-Beta pruning will score nodes when expanding
-        so we don't need to score all nodes again
-
-        """
-        return
-
-    def _update_branch_from_leaf(self, node):
+    def _backpropagate(self, node):
         "Update the scores of nodes on the whole branch"
         node = node.parent
 
@@ -153,7 +143,7 @@ class AlphaBetaPruningTree(BasicGameTree):
         """
         if node.terminated:
             self.scores[node] = [node.winner, node.winner]
-            self._update_branch_from_leaf(node)
+            self._backpropagate(node)
             return self.scores[node]
 
         # middle nodes
@@ -185,11 +175,19 @@ class AlphaBetaPruningTree(BasicGameTree):
         return score
 
 
+def print_score_range(tree, node):
+    "print score range for development"
+    print(f'{node}score range: {tree.get_score_range(node)}\n---children---')
+    for child in node.children:
+        print(f'{child}score range: {tree.get_score_range(child)}')
+    print('----------')
+
+
 if __name__ == '__main__':
     # sample usage
 
     # build tree from the empty board by default
-    tree = AlphaBetaPruningTree()
+    alpha_beta_tree = AlphaBetaPruningTree()
 
     # show layers of the tree
-    tree.show()
+    alpha_beta_tree.show()

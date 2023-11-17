@@ -90,9 +90,45 @@ path = selector.get_path(tree.root)
 selector.print_path(path)
 ```
 
+### Negamax
+
+```python
+from tic_tac_toe.tree.negamax_tree import NegamaxGameTree
+from tic_tac_toe.node_selector import NodeSelector
+
+# game tree of Negamax
+tree = NegamaxGameTree()
+tree.show()
+
+# initialize the node selector
+selector = NodeSelector(tree)
+
+# get the game path
+path = selector.get_path(tree.root)
+
+# show the game path
+selector.print_path(path)
+```
+
 ### Alpha-Beta Pruning
 
-TBC
+```python
+from tic_tac_toe.tree.negamax_tree import AlphaBetaPruningTree
+from tic_tac_toe.node_selector import NodeSelector
+
+# game tree of Alpha-Beta Pruning
+tree = AlphaBetaPruningTree()
+tree.show()
+
+# initialize the node selector
+selector = NodeSelector(tree)
+
+# get the game path
+path = selector.get_path(tree.root)
+
+# show the game path
+selector.print_path(path)
+```
 
 ### Monte Carlo Tree
 

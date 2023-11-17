@@ -24,7 +24,7 @@ This project hasn't been published on PyPI.
 We have a Command Line Interface for a human player.
 After installing this project (`poetry install`), you can run command below to play the game.
 
-```shell
+```
 >>> tic_tac_toe
 Which side do you want to play (X/O)?
 >>> X
@@ -57,6 +57,13 @@ It's a draw!
 Win: 0 Draw: 1 Lose: 0
 Play again ([Y]/N)?
 >>> N
+```
+
+You can also call the play function in Python to play this game.
+
+```python
+from tic_tac_toe.play import play
+play()
 ```
 
 ## Show Results

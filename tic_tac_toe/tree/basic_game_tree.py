@@ -14,7 +14,6 @@ from queue import LifoQueue
 from tic_tac_toe.node import Node
 
 
-
 class BasicGameTree:
     """
     The basic game tree using Minimax algorithm,
@@ -40,8 +39,14 @@ class BasicGameTree:
         A dictionary to match nodes to scores.
     building_time : float,
         The building time of the tree, in seconds.
+    renew : bool,
+        Requiring renew after selecting the next node or not.
 
     """
+
+    renew = False
+
+    _clazz_queue = LifoQueue  # The Game Tree using depth-first search
 
     def __init__(self, root=None, depth_limit=None):
         start_time = time.time()
@@ -52,8 +57,7 @@ class BasicGameTree:
         self.layers = []
         self.scores = {}
 
-        # The Game Tree using depth-first search
-        self._frontiers = LifoQueue()
+        self._frontiers = self._clazz_queue()
         self._put(self.root)
 
         # expand all nodes automatically
@@ -71,9 +75,9 @@ class BasicGameTree:
         print("depth    size    score_distribution")
         for depth, layer in enumerate(self.layers):
             size = len(layer)
-            print(f'{depth:<8d} {size:<7d} {self.__get_distribution(layer)}')
+            print(f'{depth:<8d} {size:<7d} {self._get_distribution(layer)}')
 
-    def __get_distribution(self, layer):
+    def _get_distribution(self, layer):
         distribution = {0: 0, 1: 0, -1: 0, -inf: 0, inf: 0}
         for node in layer:
             distribution[self.get_score(node)] += 1
@@ -82,7 +86,7 @@ class BasicGameTree:
     def _put(self, node):
         "put the given node into frontiers after checking node.depth"
         if self.depth_limit:
-            if node.depth > self.depth_limit:
+            if node.depth > self.depth_limit + self.root.depth:
                 return
         self._frontiers.put(node)
 
@@ -127,7 +131,7 @@ class BasicGameTree:
 
             # select the maximum score in +1 turn and minimum score in -1 turn
             if node.turn > 0:
-              func = max
+                func = max
             else:
                 func = min
             score = func(child_scores)

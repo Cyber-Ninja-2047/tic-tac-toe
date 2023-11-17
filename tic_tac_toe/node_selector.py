@@ -30,7 +30,6 @@ class NodeSelector:
     def __init__(self, tree, **kwargs):
         self.tree = tree
         self.__kwargs = kwargs
-        
 
     @staticmethod
     def print_path(path):
@@ -77,7 +76,8 @@ class NodeSelector:
 
         """
         # build a new tree from the given node if the node is not on the tree
-        if isinf(self.tree.get_score(node)):
+        if ((self.tree.renew and self.tree.root != node)
+                or isinf(self.tree.get_score(node))):
             self.tree = type(self.tree)(root=node, **self.__kwargs)
 
         # get child nodes

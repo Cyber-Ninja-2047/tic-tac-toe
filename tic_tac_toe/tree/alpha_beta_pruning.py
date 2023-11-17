@@ -11,8 +11,8 @@ from math import isinf, inf
 from tic_tac_toe.tree.basic_game_tree import BasicGameTree
 
 
-def filter_inf(x):
-    return not isinf(x)
+def _filter_converged_scores(score_range):
+    return not any(map(isinf, score_range))
 
 
 class AlphaBetaPruningTree(BasicGameTree):
@@ -110,30 +110,34 @@ class AlphaBetaPruningTree(BasicGameTree):
         # stop untill reach the root
         while node:
             score_range = self.get_score_range(node)
-            if not node.children:
+            child_scores = [self.get_score_range(c) for c in node.children]
+            if not child_scores:
                 continue
+            converged_scores = filter(_filter_converged_scores, child_scores)
 
             # max player
             if node.turn > 0:
-                child_scores = [self.get_score_range(c)[1]
-                                for c in node.children]
+                child_alpha = [x[1] for x in child_scores]
+                converged_alpha = [x[1] for x in converged_scores]
+
                 # beta
                 try:
-                    score_range[0] = max(filter(filter_inf, child_scores))
+                    score_range[0] = max(converged_alpha)
                 except ValueError:
                     pass
                 # alpha
-                score_range[1] = max(child_scores)
+                score_range[1] = max(child_alpha)
 
             # min player
             else:
-                child_scores = [self.get_score_range(c)[0]
-                                for c in node.children]
+                child_beta = [x[0] for x in child_scores]
+                converged_beta = [x[0] for x in converged_scores]
+
                 # beta
-                score_range[0] = min(child_scores)
+                score_range[0] = min(child_beta)
                 # alpha
                 try:
-                    score_range[1] = min(filter(filter_inf, child_scores))
+                    score_range[1] = min(converged_beta)
                 except ValueError:
                     pass
 
@@ -176,3 +180,13 @@ class AlphaBetaPruningTree(BasicGameTree):
         score_range = self.get_score_range(node)
         score = max(score_range, key=lambda x: x * node.turn)
         return score
+
+
+if __name__ == '__main__':
+    # sample usage
+
+    # build tree from the empty board by default
+    tree = AlphaBetaPruningTree()
+
+    # show layers of the tree
+    tree.show()

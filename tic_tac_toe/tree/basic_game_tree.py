@@ -10,7 +10,9 @@ The Basic Game Tree Class
 import time
 from math import inf, isinf
 from queue import LifoQueue
+
 from tic_tac_toe.node import Node
+
 
 
 class BasicGameTree:
@@ -66,12 +68,12 @@ class BasicGameTree:
     def show(self):
         "print size of each layers"
         print(f'building time of the tree: {self.building_time:.2f}s')
-        print("depth    size    score_distrubution")
+        print("depth    size    score_distribution")
         for depth, layer in enumerate(self.layers):
             size = len(layer)
-            print(f'{depth:<8d} {size:<7d} {self.__get_distrubution(layer)}')
+            print(f'{depth:<8d} {size:<7d} {self.__get_distribution(layer)}')
 
-    def __get_distrubution(self, layer):
+    def __get_distribution(self, layer):
         distribution = {0: 0, 1: 0, -1: 0, -inf: 0, inf: 0}
         for node in layer:
             distribution[self.get_score(node)] += 1
@@ -124,10 +126,11 @@ class BasicGameTree:
             child_scores = map(self.get_score, node.children)
 
             # select the maximum score in +1 turn and minimum score in -1 turn
-            score = max(child_scores, key=lambda x: x * node.turn)
-            if isinf(score):
-                score *= -1
-
+            if node.turn > 0:
+              func = max
+            else:
+                func = min
+            score = func(child_scores)
         self.scores[node] = score
 
     def get_score(self, node):

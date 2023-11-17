@@ -70,7 +70,7 @@ If the script is run as a main script, it starts the game by calling the 'main_f
 
 Author: Rovaid
 1. Alpha-Beta Pruning Implementation
-2. Alpha-Beta Pruning Tree (Class: AlphaBetaPruningTree)
+* Alpha-Beta Pruning Tree (Class: AlphaBetaPruningTree)
 Efficient Traversal: The AlphaBetaPruningTree class optimizes game tree traversal using the Alpha-Beta Pruning algorithm.
 
 Dynamic Expansion: The tree dynamically expands based on the current game state, minimizing unnecessary node exploration.
@@ -102,4 +102,7 @@ Functionality: Retrieves the score range from the scores dictionary or defaults 
 * get_score(current_node)
 Purpose: Returns the score of the node.
 Functionality: Considers terminal states and computes the score based on the maximum of the score range, considering the current node's turn. 
-
+2. NegaMax Algorithm
+  * It's inherited from the BasicGameTree class
+  * The only difference between NegaMax and MiniMax is the scoring logic. which is minimax uses if ~ else statement for calculating the minimum and maximum player score and negamax uses the calculation logic which is score = turn*([score*turn for  score in child_scores])
+  

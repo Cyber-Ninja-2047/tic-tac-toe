@@ -8,11 +8,11 @@ The AlphaBetaPruningTree Class
 
 """
 from math import isinf, inf
-from tic_tac_toe.tree.basic_game_tree import BasicGameTree
+from basic_game_tree import BasicGameTree
 
 
-def _filter_converged_scores(score_range):
-    return not any(map(isinf, score_range))
+def filter_inf(x):
+    return not isinf(x)
 
 
 class AlphaBetaPruningTree(BasicGameTree):
@@ -39,24 +39,21 @@ class AlphaBetaPruningTree(BasicGameTree):
 
     """
 
-    def _expand_all(self):
-        return
-
     def _expand_next(self):
         "Expand the next node"
-        current_node = self._frontiers.get()
+        node = self._frontiers.get()
 
         # Score the node
-        self._score(current_node)
+        self._score(node)
 
         # Check the expanding
-        if not self._check_expanding(current_node):
+        if not self._check_expanding(node):
             return
 
         # Expand the node
-        self._expand_the_node(current_node)
+        self._expand_the_node(node)
 
-    def _check_expanding(self, current_node):
+    def _check_expanding(self, node):
         """
         Check if expanding is needed.
 
@@ -66,96 +63,86 @@ class AlphaBetaPruningTree(BasicGameTree):
             True means to expand, False means to stop.
 
         """
-        if current_node.terminated:
+        if node.terminated:
             return True
 
-        previous_node = current_node.parent
+        parent = node.parent
 
         # Root node must be expanded
-        if not previous_node:
+        if not parent:
             return True
 
-        # Do not expand if any previous node has converged score
-        if self.__check_branch_converged(current_node):
+        # Do not expand if parent's score converged
+        beta_parent, alpha_parent = self.get_score_range(parent)
+        if alpha_parent == beta_parent:
             return False
 
         # Check parent's parent
-        beta_previous, alpha_previous = self.get_score_range(previous_node)
-        old_node = previous_node.parent
-        if not old_node:
+        grandparent = parent.parent
+        if not grandparent:
             return True
 
         # Pruning
-        beta_old, alpha_old = self.get_score_range(old_node)
+        beta_grand, alpha_grand = self.get_score_range(grandparent)
 
         # Adjusted pruning conditions
-        if old_node.turn > 0:  # MAX player
-            return alpha_previous >= beta_old
-        # MIN player
-        return beta_previous <= alpha_old
+        if grandparent.turn > 0:
+            return alpha_parent >= beta_grand
+        else:
+            return beta_parent <= alpha_grand
 
-    def __check_branch_converged(self, node):
-        node = node.parent
-        while node:
-            if _filter_converged_scores(self.get_score_range(node)):
-                return True
-            node = node.parent
-        return False
+    def _update_branch_from_leaf(self, node):
+        "Update scores of nodes on the whole branch"
+        # Check if node is None
+        if node is None:
+            return
 
-    def _backpropagate(self, node):
-        "Update the scores of nodes on the whole branch"
         node = node.parent
 
-        # stop untill reach the root
+        # Stop until reaching the root
         while node:
             score_range = self.get_score_range(node)
-            child_scores = [self.get_score_range(c) for c in node.children]
-            if not child_scores:
+            if not node.children:
                 continue
-            converged_scores = filter(_filter_converged_scores, child_scores)
 
-            # max player
+            # Max player
             if node.turn > 0:
-                child_alpha = [x[1] for x in child_scores]
-                converged_alpha = [x[1] for x in converged_scores]
-
-                # beta
+                child_scores = [self.get_score_range(c)[1] for c in node.children]
+                # Beta
                 try:
-                    score_range[0] = max(converged_alpha)
+                    score_range[0] = max(filter(filter_inf, child_scores))
                 except ValueError:
                     pass
-                # alpha
-                score_range[1] = max(child_alpha)
+                # Alpha
+                score_range[1] = max(child_scores)
 
-            # min player
+            # Min player
             else:
-                child_beta = [x[0] for x in child_scores]
-                converged_beta = [x[0] for x in converged_scores]
-
-                # beta
-                score_range[0] = min(child_beta)
-                # alpha
+                child_scores = [self.get_score_range(c)[0] for c in node.children]
+                # Beta
+                score_range[0] = min(child_scores)
+                # Alpha
                 try:
-                    score_range[1] = min(converged_beta)
+                    score_range[1] = min(filter(filter_inf, child_scores))
                 except ValueError:
                     pass
 
-            # update the next parent
+            # Update the next parent
             node = node.parent
 
     def _score(self, node):
         """
         Compute score for the node.
-        And update scores for every nodes on the branch
-        when reach a terminal state.
+        And update scores for every node on the branch
+        when reaching a terminal state.
 
         """
         if node.terminated:
             self.scores[node] = [node.winner, node.winner]
-            self._backpropagate(node)
+            self._update_branch_from_leaf(node)
             return self.scores[node]
 
-        # middle nodes
+        # Middle nodes
         self.scores[node] = self.get_score_range(node)
         return self.scores[node]
 
@@ -167,7 +154,7 @@ class AlphaBetaPruningTree(BasicGameTree):
         try:
             score_range = self.scores[node]
         except KeyError:
-            # default score range
+            # Default score range
             score_range = [-inf, inf]
         return score_range
 
@@ -177,22 +164,11 @@ class AlphaBetaPruningTree(BasicGameTree):
             return node.winner
 
         score_range = self.get_score_range(node)
-        if _filter_converged_scores(score_range):
-            score = max(score_range, key=lambda x: x * node.turn)
-        else:
-            score = node.turn * inf
+        score = max(score_range, key=lambda x: x * node.turn)
         return score
 
 
-def print_score_range(tree, node):
-    "print score range for development"
-    print(f'{node}score range: {tree.get_score_range(node)}\n---children---')
-    for child in node.children:
-        print(f'{child}score range: {tree.get_score_range(child)}')
-    print('----------')
-
-
-if _name_ == '_main_':
+if __name__ == '__main__':
     # sample usage
 
     # build tree from the empty board by default

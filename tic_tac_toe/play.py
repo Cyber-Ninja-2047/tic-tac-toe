@@ -8,12 +8,14 @@ Created on Tue Nov 14 15:43:27 2023
 from tic_tac_toe.node import Node
 from tic_tac_toe.tree.basic_game_tree import BasicGameTree
 from tic_tac_toe.tree.negamax_tree import NegamaxGameTree
+from tic_tac_toe.tree.alpha_beta_pruning import AlphaBetaPruningTree
 from tic_tac_toe.node_selector import NodeSelector
 
 
 NAME_TO_TREE = {
     "minimax": BasicGameTree,
     "negamax": NegamaxGameTree,
+    "ab_pruning": AlphaBetaPruningTree,
 }
 
 
@@ -25,7 +27,7 @@ def play(**kwargs):
     ------
     size : int,
         The size of the game board. The default is 3.
-    tree_type : "minimax", "ab_pruning"
+    tree_type : "minimax", "negamax", "ab_pruning"
         The type of game tree.
 
     kwargs
@@ -71,7 +73,7 @@ def play(**kwargs):
         play_again = input("Play again ([Y]/N)? ").upper().strip() != 'N'
 
 
-def initialize_game(size=3, length=3, tree_type="minimax", **kwargs):
+def initialize_game(size=3, length=3, tree_type="ab_pruning", **kwargs):
     "Initialize the game components"
     root = Node(_generate_empty_board(size), length=length)
     clazz = NAME_TO_TREE[tree_type]

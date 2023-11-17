@@ -72,8 +72,9 @@ class AlphaBetaPruningTree(BasicGameTree):
         if not previous_node:
             return True
 
-        # Do not expand if any previous node has converged score
-        if self.__check_branch_converged(current_node):
+        # Do not expand if the root has converged score
+        beta_root, alpha_root = self.get_score_range(self.root)
+        if beta_root == alpha_root:
             return False
 
         # Check parent's parent
@@ -90,14 +91,6 @@ class AlphaBetaPruningTree(BasicGameTree):
             return alpha_previous >= beta_old
         # MIN player
         return beta_previous <= alpha_old
-
-    def __check_branch_converged(self, node):
-        node = node.parent
-        while node:
-            if _filter_converged_scores(self.get_score_range(node)):
-                return True
-            node = node.parent
-        return False
 
     def _backpropagate(self, node):
         "Update the scores of nodes on the whole branch"

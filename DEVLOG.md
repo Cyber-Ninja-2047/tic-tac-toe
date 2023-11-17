@@ -39,21 +39,7 @@ Completed the class NodeSelector, including features below:
 * the "get_path" method, returning the game path from the given root node.
 * automatically build a new tree from the given node if the node is not on the original tree.
 
-# 2023-11-16
-Author: Anthony
-
-Optimized the human player interface, including features below:
-
-* record the win-draw-lose times.
-* allow user to select another type of game tree.
-* allow user to input upper or lower case.
-* do not rebuild the tree in replaying, it saves much time when using the minimax game tree.
-* give more hints if user's input is invalid.
-* check the inputted index range.
-
-Fixed a bug for NodeSelector when it building a new tree.
-
-# 2023-11-17
+# 2023-11-09
 
 Author: Paul
 
@@ -67,3 +53,18 @@ Implementing the CMD interface for a human player:
 * The 'main_function' controls the game flow, alternating between player and computer moves until the game ends. It then prints the result and asks if the player wants to play again
 
 If the script is run as a main script, it starts the game by calling the 'main_function'. This script allows a human player to play Tic-Tac-Toe against a computer, with the computer's moves determined by a simple adversarial search algorithm.
+
+
+# 2023-11-16
+Author: Anthony
+
+Optimized the human player interface, including features below:
+
+* record the win-draw-lose times.
+* allow user to select another type of game tree.
+* allow user to input upper or lower case.
+* do not rebuild the tree in replaying, it saves much time when using the minimax game tree.
+* give more hints if user's input is invalid.
+* check the inputted index range.
+
+Fixed a bug for NodeSelector when it building a new tree.

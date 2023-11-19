@@ -100,21 +100,27 @@ class BasicGameTree:
         node = self._frontiers.get()
         self._expand_the_node(node)
 
-    def _expand_the_node(self, node):
+    def _expand_the_node(self, node, to_put=True):
+        depth = node.depth - self.root.depth
         # record the node
-        if len(self.layers) <= node.depth:
-            layer = []
-            self.layers.append(layer)
-        else:
-            layer = self.layers[node.depth]
-        layer.append(node)
+        layer = self._get_layer(depth)
+        layer.add(node)
 
         # expand the node
         children = node.expand()
 
         # put children to frontiers
-        for child in children:
-            self._put(child)
+        if to_put:
+            for child in children:
+                self._put(child)
+
+    def _get_layer(self, depth):
+        if len(self.layers) <= depth:
+            layer = set()
+            self.layers.append(layer)
+        else:
+            layer = self.layers[depth]
+        return layer
 
     def _score_all(self):
         "score all nodes from the bottom"

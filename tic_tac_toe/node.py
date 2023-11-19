@@ -8,10 +8,9 @@ A basic component Node on the game tree
 
 """
 from copy import deepcopy
-from itertools import product
 
 
-TIC_DIRECTIONS = [(0, 1), (1, 0), (1, 1), (-1, 1)]
+DIRECTIONS = [(0, 1), (1, 0), (1, 1), (-1, 1)]
 PLAYERS = {1: 'X', -1: 'O', 0: ' '}
 
 
@@ -19,11 +18,11 @@ def _number_to_string(turn):
     return PLAYERS[turn]
 
 
-def _generate_tictactoe(coordinate, length):
+def generate_tictactoe(coordinate, length):
     "return indices of tictactoe"
     ind_row, ind_col = coordinate
     indices_tictactoe = []
-    for delta_row, delta_col in TIC_DIRECTIONS:
+    for delta_row, delta_col in DIRECTIONS:
         index = {(ind_row + delta_row * ind,
                   ind_col + delta_col * ind) for ind in range(length)}
         indices_tictactoe.append(index)
@@ -111,8 +110,14 @@ class Node:
         return self.depth < oth.depth
 
     def __get_name(self):
-        self._name = '\n'.join([' '.join(map(_number_to_string, r))
-                                for r in self.data]) + '\n'
+        
+        rows = [f'{i} ' + ' '.join(map(_number_to_string, r))
+                for i, r in enumerate(self.data)]
+        rows.append(
+            ' ' * 2 + ' '.join(map(str,
+                                   range(len(self.data[-1]))))
+        )
+        self._name = '\n'.join(rows) + '\n'
 
     def __get_coordinates(self):
         self.coordinates = {}
@@ -131,7 +136,7 @@ class Node:
             if len(coordinates) < self.length:
                 continue
             for coordinate in coordinates:
-                for ind_tictactoe in _generate_tictactoe(coordinate, self.length):
+                for ind_tictactoe in generate_tictactoe(coordinate, self.length):
                     if len(ind_tictactoe & coordinates) == self.length:
                         self.__winner = player
                         return

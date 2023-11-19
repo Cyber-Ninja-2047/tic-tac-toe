@@ -67,10 +67,8 @@ class AlphaBetaPruningTree(BasicGameTree):
         if node.terminated:
             return True
 
-        previous_node = node.parent
-
         # Root node must be expanded
-        if not previous_node:
+        if not node.parent:
             return True
 
         # Do not expand if the root has converged score
@@ -79,6 +77,7 @@ class AlphaBetaPruningTree(BasicGameTree):
             return False
 
         # Check parent's parent
+        previous_node = node.parent
         beta_previous, alpha_previous = self.get_score_range(previous_node)
         old_node = previous_node.parent
         if not old_node:

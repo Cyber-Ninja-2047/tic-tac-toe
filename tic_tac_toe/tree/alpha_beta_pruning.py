@@ -67,10 +67,8 @@ class AlphaBetaPruningTree(BasicGameTree):
         if node.terminated:
             return True
 
-        parent = node.parent
-
         # Root node must be expanded
-        if not parent:
+        if not node.parent:
             return True
 
         # Do not expand if the root has converged score
@@ -79,13 +77,14 @@ class AlphaBetaPruningTree(BasicGameTree):
             return False
 
         # Check parent's parent
+        previous_node = node.parent
         beta_previous, alpha_previous = self.get_score_range(previous_node)
         old_node = previous_node.parent
         if not old_node:
             return True
 
         # Pruning
-        beta_grand, alpha_grand = self.get_score_range(grandparent)
+        beta_old, alpha_old = self.get_score_range(old_node)
 
         # Adjusted pruning conditions
         if old_node.turn > 0:  # MAX player

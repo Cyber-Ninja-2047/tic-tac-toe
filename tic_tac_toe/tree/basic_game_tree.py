@@ -104,7 +104,7 @@ class BasicGameTree:
         depth = node.depth - self.root.depth
         # record the node
         layer = self._get_layer(depth)
-        layer.add(node)
+        layer.append(node)
 
         # expand the node
         children = node.expand()
@@ -116,7 +116,7 @@ class BasicGameTree:
 
     def _get_layer(self, depth):
         if len(self.layers) <= depth:
-            layer = set()
+            layer = []
             self.layers.append(layer)
         else:
             layer = self.layers[depth]

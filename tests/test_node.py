@@ -50,9 +50,8 @@ def test_node_expand_no_moves():
         children = node.expand()
         assert len(children) == 0
 
+
 # try to expand a node with available moves
-
-
 def test_node_expand_with_moves():
     data_ls = [[[-1, 1, -1], [1, 0, -1], [1, 0, 1]],
                [[0, 1, -1], [1, -1, -1], [0, 1, 1]],
@@ -66,9 +65,8 @@ def test_node_expand_with_moves():
         children = node.expand()
         assert len(children) > 0
 
+
 # expand a node and check the return of a child node
-
-
 def test_node_expand_turn():
     data_ls = [[[1, 0, -1], [-1, 1, -1], [1, -1, 1]],
                [[1, -1, 0], [1, -1, -1], [1, -1, 1]],
@@ -98,9 +96,8 @@ def test_node_termination_winner_a():
         assert node.terminated == True
         assert node.winner == 1
 
+
 # test the termination state with winner == -1
-
-
 def test_node_termination_winner_b():
     data_ls = [[[1, -1, 1], [-1, -1, 1], [1, -1, 0]],
                [[1, 1, -1], [1, -1, 1], [-1, -1, 1]]]

@@ -60,6 +60,7 @@ class MonteCarloTree(BasicGameTree):
 
     def simulate(self, node):
         "perform one simulation for the node"
+        # TODO: the MCTS doesn't perform well, maybe the problem is the simulation
         initial_depth = node.depth
         # evaluation = self._stop_early(node)
         # if evaluation:
@@ -72,19 +73,16 @@ class MonteCarloTree(BasicGameTree):
         return node.winner, node.depth - initial_depth
 
     def _stop_early(self, node):
+        "stop if the node has some winning pattern"
         node.expand()
         draw, win, lose = zip(*[self._winning_detector.detect(c)
                                 for c in node.children])
         parent_turn = -node.turn
         if parent_turn < 0:
-            if any(lose):
-                return -1
-            elif any(win):
-                return 1
-        else:
             if any(win):
                 return 1
-            elif any(lose):
+        else:
+            if any(lose):
                 return -1
         return 0
 
@@ -110,8 +108,9 @@ class MonteCarloTree(BasicGameTree):
             while (not self._frontiers.empty()
                    and time.time() - start < self.time_limit):
                 self._expand_next()
-            if not self._put_more():
-                break
+            # if not self._put_more():
+            #     break
+            break
 
     def _expand_next(self):
         if self._frontiers.empty():
@@ -152,9 +151,9 @@ class MonteCarloTree(BasicGameTree):
 
         draw_win_lose = self.get_simulation_result(node)
         draw_win_lose[winner] += 1
-
         if node == self.root:
             return
+
         for parent in self._get_parents(node):
             self._backpropagate(parent, winner)
 
@@ -164,21 +163,23 @@ class MonteCarloTree(BasicGameTree):
         draw, win, lose = draw_win_lose
         node_rollouts = sum(draw_win_lose)
 
-        # compute exploitation priority
+        # compute exploitation
         try:
             # count_not_bad = draw + draw_win_lose[self.root.turn]
             # exploitation = count_not_bad / node_rollouts
             exploitation = draw_win_lose[parent_turn] / node_rollouts
-        except:
+        except ZeroDivisionError:
             return -inf
-        exploitation *= parent_turn
+
         if (not self.exploration_weight
                 or node == self.root):
             return -exploitation
 
-        # compute exploration priority
+        # compute exploration
+        layer = self._get_layer(node.depth - self.root.depth - 1)
         parent_rollouts = sum([sum(self.get_simulation_result(p))
-                               for p in self._get_parents(node)])
+                               for p in self._get_parents(node)
+                               if p in layer])
 
         exploration = (self.exploration_weight *
                        (log(parent_rollouts) / node_rollouts)**0.5)
@@ -231,8 +232,6 @@ if __name__ == '__main__':
     # 2 non-terminated nodes
     node_ls = [
         Node(),
-        # Node([[1, 1, 0], [-1, -1, 0], [0, 0, 0]], turn=1),
-        # Node([[1, 1, 0], [-1, -1, 0], [0, 0, -1]], turn=-1),
     ]
 
     for node in node_ls:

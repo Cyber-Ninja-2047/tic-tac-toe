@@ -11,6 +11,7 @@ from tic_tac_toe.node import Node
 from tic_tac_toe.tree.alpha_beta_pruning import BasicGameTree
 from tic_tac_toe.tree.negamax_tree import NegamaxGameTree
 from tic_tac_toe.tree.alpha_beta_pruning import AlphaBetaPruningTree
+from tic_tac_toe.tree.monte_carlo import MonteCarloTree
 from tic_tac_toe.node_selector import NodeSelector
 
 
@@ -39,3 +40,14 @@ def test_negamax_draw():
 
 def test_ab_pruning_draw():
     _base_test_draw(AlphaBetaPruningTree)
+
+
+def test_monte_carlo():
+    root = Node()
+    result = {0: 0, 1: 0, -1: 0}
+    for i in range(100):
+        selector = NodeSelector(MonteCarloTree(root))
+        path = selector.get_path(root)
+        final_state = path[-1]
+        result[final_state.winner] += 1
+    print(f'distribution of winner: {result}')

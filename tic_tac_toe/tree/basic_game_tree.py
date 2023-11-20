@@ -69,6 +69,10 @@ class BasicGameTree:
         # record the building time
         self.building_time = time.time() - start_time
 
+    def transfer(self, root):
+        "create a new tree from the root"
+        return type(self)(root, depth_limit=self.depth_limit)
+
     def show(self):
         "print size of each layers"
         print(f'building time of the tree: {self.building_time:.2f}s')

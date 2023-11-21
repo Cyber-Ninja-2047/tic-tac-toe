@@ -110,7 +110,7 @@ class Node:
         return self.depth < oth.depth
 
     def __get_name(self):
-        
+
         rows = [f'{i} ' + ' '.join(map(_number_to_string, r))
                 for i, r in enumerate(self.data)]
         rows.append(
@@ -153,6 +153,11 @@ class Node:
             if 0 in row:
                 self.__terminated = False
                 return
+
+    def clear_children(self):
+        "remove all the child nodes"
+        self.children.clear()
+        self.__expanded = False
 
     def expand(self):
         "get and return a tuple of child nodes"

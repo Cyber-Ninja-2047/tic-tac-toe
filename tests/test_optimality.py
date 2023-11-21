@@ -15,9 +15,9 @@ from tic_tac_toe.node_selector import NodeSelector
 
 def _base_test_draw(clazz, **kwargs):
     "test if the final state is always a draw"
-    root = Node()
     result = {0: 0, 1: 0, -1: 0}
     for i in range(100):
+        root = Node()
         selector = NodeSelector(clazz(root, **kwargs))
         path = selector.get_path(root)
         final_state = path[-1]

@@ -2,7 +2,7 @@
 """
 Created on Fri Nov 17 12:34:02 2023
 
-@author: Anthony
+@author: Anthony, Rovaid
 
 class MonteCarloTree
 

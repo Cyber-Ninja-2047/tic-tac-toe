@@ -9,6 +9,8 @@ from tic_tac_toe.node import Node
 from tic_tac_toe.tree.basic_game_tree import BasicGameTree
 from tic_tac_toe.tree.negamax_tree import NegamaxGameTree
 from tic_tac_toe.tree.alpha_beta_pruning import AlphaBetaPruningTree
+from tic_tac_toe.tree.monte_carlo import MonteCarloTree
+
 from tic_tac_toe.node_selector import NodeSelector
 
 
@@ -16,6 +18,7 @@ NAME_TO_TREE = {
     "minimax": BasicGameTree,
     "negamax": NegamaxGameTree,
     "ab_pruning": AlphaBetaPruningTree,
+    'monte_carlo': MonteCarloTree,
 }
 
 
@@ -27,7 +30,7 @@ def play(**kwargs):
     ------
     size : int,
         The size of the game board. The default is 3.
-    tree_type : "minimax", "negamax", "ab_pruning"
+    tree_type : "minimax", "negamax", "ab_pruning" or "monte_carlo"
         The type of game tree.
 
     kwargs

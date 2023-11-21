@@ -8,7 +8,7 @@ Created on Wed Nov 15 16:16:26 2023
 The AlphaBetaPruningTree Class
 
 """
-from math import isinf, inf
+from math import inf
 from tic_tac_toe.tree.basic_game_tree import BasicGameTree
 
 

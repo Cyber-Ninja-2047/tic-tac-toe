@@ -10,7 +10,6 @@ class MonteCarloTree
 import time
 from math import inf, log
 from random import choice
-from queue import PriorityQueue
 from tic_tac_toe.tree.basic_game_tree import BasicGameTree
 from tic_tac_toe.winning_detector import WinningDetector
 
@@ -20,11 +19,36 @@ class MonteCarloTree(BasicGameTree):
     The Minimax Game Tree with time limit.
     The non-terminal node will be scored by simulations.
 
+    params
+    ------
+    root : Node or None,
+        The given root of the tree. None means to start from an empty board.
+    depth_limit : int or None,
+        The depth limit of the tree, should only use on Monte Carlo Tree.
+        None means no depth limit.
+    time_limit : float,
+        The time limit of tree building.
+    exploration_weight : float,
+        The weight to choose nodes with fewer simulations.
+
+    attributes
+    ----------
+    layers : list,
+        A nested list to store nodes layer by layer.
+    scores : dict,
+        node(Node) - draw_win_lose([int, int, int])
+        A dictionary to match nodes to simulation result,
+        The simulation result are the numbers of draw, MAX win and MIN win respective
+    building_time : float,
+        The building time of the tree, in seconds.
+    count_simulation : int,
+        The total simulation times.
+    renew : bool,
+        Requiring renew after selecting the next node or not.
+
     """
 
     renew = True
-
-    _clazz_queue = PriorityQueue  # select the most promising node
 
     def __init__(self, root=None, depth_limit=None, time_limit=1,
                  exploration_weight=1.41):
@@ -32,7 +56,7 @@ class MonteCarloTree(BasicGameTree):
         start = time.time()
         self.time_limit = time_limit
         self.exploration_weight = exploration_weight
-        self.__create_winning_detector(root)
+        self.__create_winning_detector(self.root)
         self.count_simulation = 0
 
         self._expand_all_mcts()
@@ -96,7 +120,7 @@ class MonteCarloTree(BasicGameTree):
         self._backpropagate(node.parent, winner)
 
     def select(self):
-        "select the next node to expand"
+        "select the next node to expand from root, but not frontiers"
         node = self.root
         while node.children:
             node = min(node.children, key=self._get_priority)
@@ -136,8 +160,11 @@ class MonteCarloTree(BasicGameTree):
         return
 
     def _expand_all_mcts(self):
-        "expand the tree"
+        "expand the tree if there is still time"
+        # start from an unexpanded root
         self.root.clear_children()
+
+        # expand if there is time
         start = time.time()
         while time.time() - start < self.time_limit:
             self._expand_next()
@@ -150,8 +177,8 @@ class MonteCarloTree(BasicGameTree):
 
     def _expand_the_node(self, node, to_expand=False):
         "expand the node and put it into the correct layer"
-        depth = node.depth - self.root.depth
         # record the node
+        depth = node.depth - self.root.depth
         layer = self._get_layer(depth)
         layer.add(node)
 
@@ -177,7 +204,11 @@ class MonteCarloTree(BasicGameTree):
         return draw_win_lose
 
     def get_score(self, node):
-        "return the simulations times times node.parent.turn"
+        """
+        return the simulation times times node.parent.turn.
+        the node with most simulation times is the best move.
+
+        """
         return -node.turn * sum(self.get_simulation(node))
 
     def _get_distribution(self, layer):

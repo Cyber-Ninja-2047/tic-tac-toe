@@ -50,7 +50,7 @@ class MonteCarloTree(BasicGameTree):
 
     renew = True
 
-    def __init__(self, root=None, depth_limit=None, time_limit=1,
+    def __init__(self, root=None, depth_limit=None, time_limit=0.5,
                  exploration_weight=1.41):
         super().__init__(root=root, depth_limit=depth_limit)
         start = time.time()
@@ -183,7 +183,7 @@ class MonteCarloTree(BasicGameTree):
         layer.add(node)
 
         # expand the node
-        if to_expand:
+        if to_expand or node == self.root:  # the root should always be expanded
             node.expand()
 
     def _get_layer(self, depth):

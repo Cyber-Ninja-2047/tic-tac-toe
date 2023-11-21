@@ -18,7 +18,7 @@ NAME_TO_TREE = {
     "minimax": BasicGameTree,
     "negamax": NegamaxGameTree,
     "ab_pruning": AlphaBetaPruningTree,
-    'montecarlo': MonteCarloTree,
+    'monte_carlo': MonteCarloTree,
 }
 
 
@@ -30,7 +30,7 @@ def play(**kwargs):
     ------
     size : int,
         The size of the game board. The default is 3.
-    tree_type : "minimax", "negamax", "ab_pruning" or "montecarlo"
+    tree_type : "minimax", "negamax", "ab_pruning" or "monte_carlo"
         The type of game tree.
 
     kwargs

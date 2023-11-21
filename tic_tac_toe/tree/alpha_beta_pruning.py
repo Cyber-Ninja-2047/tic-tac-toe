@@ -13,7 +13,7 @@ from tic_tac_toe.tree.basic_game_tree import BasicGameTree
 
 
 def _filter_converged_scores(score_range):
-    return not any(map(isinf, score_range))
+    return score_range[0] == score_range[1]
 
 
 class AlphaBetaPruningTree(BasicGameTree):

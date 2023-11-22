@@ -133,8 +133,10 @@ class MonteCarloTree(BasicGameTree):
 
         # compute exploitation
         try:
-            exploitation = (draw_win_lose[-node.turn] +
-                            0.5 * draw_win_lose[0]  # draw is better than lose
+            # draw is better than lose
+            draw_factor = int(bool(draw_win_lose[0]))  # = 1 if any draw
+
+            exploitation = (draw_win_lose[-node.turn] + draw_factor
                             ) / node_rollouts
         except ZeroDivisionError:
             return -inf

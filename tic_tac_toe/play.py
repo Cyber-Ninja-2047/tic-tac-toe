@@ -81,7 +81,7 @@ def initialize_game(size=3, length=3, tree_type="ab_pruning", **kwargs):
     root = Node(_generate_empty_board(size), length=length)
     clazz = NAME_TO_TREE[tree_type]
     game_tree = clazz(root, **kwargs)
-    node_selector = NodeSelector(game_tree, **kwargs)
+    node_selector = NodeSelector(game_tree)
     return game_tree.root, node_selector
 
 

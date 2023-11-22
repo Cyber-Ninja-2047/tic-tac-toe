@@ -41,7 +41,7 @@ class MonteCarloTree(BasicGameTree):
         The simulation result are the numbers of draw, MAX win and MIN win respective
     building_time : float,
         The building time of the tree, in seconds.
-    count_simulation : int,
+    count_simulations : int,
         The total simulation times.
     renew : bool,
         Requiring renew after selecting the next node or not.
@@ -57,7 +57,7 @@ class MonteCarloTree(BasicGameTree):
         self.time_limit = time_limit
         self.exploration_weight = exploration_weight
         self.__create_winning_detector(self.root)
-        self.count_simulation = 0
+        self.count_simulations = 0
 
         self._expand_all_mcts()
         self.building_time = time.time() - start
@@ -75,7 +75,7 @@ class MonteCarloTree(BasicGameTree):
 
     def simulate(self, node):
         "perform one simulation for the node"
-        self.count_simulation += 1
+        self.count_simulations += 1
 
         # detect some winning patterns
         winner, to_expand = self._stop_early(node)
@@ -144,10 +144,10 @@ class MonteCarloTree(BasicGameTree):
             return -exploitation
 
         # compute exploration
-        if not self.count_simulation or not node_rollouts:
+        if not self.count_simulations or not node_rollouts:
             return -inf
         exploration = (self.exploration_weight *
-                       (log(self.count_simulation) / node_rollouts)**0.5)
+                       (log(self.count_simulations) / node_rollouts)**0.5)
 
         return -(exploitation + exploration)
 
@@ -210,6 +210,11 @@ class MonteCarloTree(BasicGameTree):
 
         """
         return -node.turn * sum(self.get_simulation(node))
+
+    def show(self):
+        "show the layer size and score distribution of the tree"
+        super().show()
+        print(f"number of simulations: {self.count_simulations}")
 
     def _get_distribution(self, layer):
         distribution = {0: 0, 1: 0, -1: 0, -inf: 0, inf: 0}

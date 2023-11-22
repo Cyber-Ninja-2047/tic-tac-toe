@@ -80,6 +80,7 @@ class BasicGameTree:
         for depth, layer in enumerate(self.layers):
             size = len(layer)
             print(f'{depth:<8d} {size:<7d} {self._get_distribution(layer)}')
+        print(f"total size: {sum(map(len, self.layers))}")
 
     def _get_distribution(self, layer):
         distribution = {0: 0, 1: 0, -1: 0, -inf: 0, inf: 0}

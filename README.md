@@ -113,7 +113,7 @@ selector.print_path(path)
 ### Alpha-Beta Pruning
 
 ```python
-from tic_tac_toe.tree.negamax_tree import AlphaBetaPruningTree
+from tic_tac_toe.tree.alpha_beta_pruning import AlphaBetaPruningTree
 from tic_tac_toe.node_selector import NodeSelector
 
 # game tree of Alpha-Beta Pruning
@@ -132,4 +132,20 @@ selector.print_path(path)
 
 ### Monte Carlo Tree
 
-TBC
+```python
+from tic_tac_toe.tree.monte_carlo import MonteCarloTree
+from tic_tac_toe.node_selector import NodeSelector
+
+# game tree of Monte Carlo Tree
+tree = MonteCarloTree()
+tree.show()
+
+# initialize the node selector
+selector = NodeSelector(tree)
+
+# get the game path
+path = selector.get_path(tree.root)
+
+# show the game path
+selector.print_path(path)
+```

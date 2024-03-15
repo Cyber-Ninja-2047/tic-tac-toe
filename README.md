@@ -149,3 +149,6 @@ path = selector.get_path(tree.root)
 # show the game path
 selector.print_path(path)
 ```
+
+### Test Report
+You can also check our [test report](https://cyber-ninja-2047.github.io/tic-tac-toe/report.html?sort=result).
